@@ -17,7 +17,7 @@ function App() {
               className="h-full w-full object-cover"
             />
             <CardContent className="absolute bottom-0 left-0 right-0 bg-white/70 p-4">
-              <CardTitle>NAPS</CardTitle>
+              <CardTitle className="my-2">NAPS UNILAG</CardTitle>
               <Button
                 variant="ghost"
                 size="lg"
