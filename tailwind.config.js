@@ -10,7 +10,15 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)"
       },
+      backgroundColor: {
+        main: "#2561ED",
+        main_grey: "#353535",
+        text_grey: "#47484B"
+      },
       colors: {
+        main: "#2561ED",
+        main_grey: "#353535",
+        text_grey: "#47484B",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -51,6 +59,13 @@ export default {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))"
         }
+      },
+      fontFamily: {
+        GeneralSans: ['"GeneralSans"', "sans-serif"],
+        "GeneralSans-Italic": ['"GeneralSans-Italic"', "sans-serif"],
+        "GeneralSans-Medium": ['"GeneralSans-Medium"', "sans-serif"],
+        "GeneralSans-Semibold": ['"GeneralSans-Semibold"', "sans-serif"],
+        "GeneralSans-Bold": ['"GeneralSans-Bold"', "sans-serif"]
       }
     }
   },

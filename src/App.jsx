@@ -1,35 +1,52 @@
-// import { useState } from "react";
 import "./App.css";
-import { Button } from "./components/ui/button";
-import { Card, CardContent, CardTitle } from "./components/ui/card";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Signup from "./pages/authentication/Signup";
+import Login from "./pages/authentication/Login";
+import Dashboard from "./pages/Dashboard";
+import AuthProvider from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Welcome from "./pages/Welcome";
+import ForgotPassword from "./pages/authentication/ForgotPassword";
+import VerifyAccount from "./pages/authentication/VerifyAccount";
+import DashboardLayout from "./layouts/DashboardLayout";
+import ProfileOverview from "./pages/profileOverview";
+// import Resources from "./pages/Resources";
+// import Forums from "./pages/Forums";
+// import MentorProgram from "./pages/MentorProgram";
+// import UpcomingEvents from "./pages/UpcomingEvents";
+// import ProfileOverview from "./pages/ProfileOverview";
 
 function App() {
   return (
-    <>
-      <div>
-        <Card className="h-full">
-          <div className="relative h-[300px]">
-            <img
-              src={
-                "https://i0.wp.com/www.chronicle.ng/wp-content/uploads/2021/08/UNILAG-University-of-Lagos.jpg"
-              }
-              alt={"image"}
-              className="h-full w-full object-cover"
-            />
-            <CardContent className="absolute bottom-0 left-0 right-0 bg-white/70 p-4">
-              <CardTitle className="my-2">NAPS UNILAG</CardTitle>
-              <Button
-                variant="ghost"
-                size="lg"
-                onClick={() => alert("This is an alert")}
-              >
-                Click me
-              </Button>
-            </CardContent>
-          </div>
-        </Card>
-      </div>
-    </>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Welcome />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/forgotPassword" element={<ForgotPassword />} />
+          <Route path="/verifyAccount" element={<VerifyAccount />} />
+
+          {/* Protected Dashboard Routes with DashboardLayout */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="dashboard" element={<Dashboard />} />
+            {/* <Route path="resources" element={<Resources />} />
+            <Route path="forums" element={<Forums />} />
+            <Route path="mentor-program" element={<MentorProgram />} />
+            <Route path="upcoming-events" element={<UpcomingEvents />} /> */}
+            <Route path="profile-overview" element={<ProfileOverview />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
