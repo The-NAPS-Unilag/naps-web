@@ -10,6 +10,8 @@ import ForgotPassword from "./pages/authentication/ForgotPassword";
 import VerifyAccount from "./pages/authentication/VerifyAccount";
 import DashboardLayout from "./layouts/DashboardLayout";
 import ProfileOverview from "./pages/profileOverview";
+import ResetPassword from "./pages/authentication/ResetPassword";
+import UpcomingEvents from "./pages/upcomingEvents";
 // import Resources from "./pages/Resources";
 // import Forums from "./pages/Forums";
 // import MentorProgram from "./pages/MentorProgram";
@@ -26,6 +28,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/forgotPassword" element={<ForgotPassword />} />
+          <Route path="/resetPassword" element={<ResetPassword />} />
           <Route path="/verifyAccount" element={<VerifyAccount />} />
 
           {/* Protected Dashboard Routes with DashboardLayout */}
@@ -40,8 +43,8 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             {/* <Route path="resources" element={<Resources />} />
             <Route path="forums" element={<Forums />} />
-            <Route path="mentor-program" element={<MentorProgram />} />
-            <Route path="upcoming-events" element={<UpcomingEvents />} /> */}
+            <Route path="mentor-program" element={<MentorProgram />} /> */}
+            <Route path="upcoming-events" element={<UpcomingEvents />} />
             <Route path="profile-overview" element={<ProfileOverview />} />
           </Route>
         </Routes>

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeClosed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { GenerateAPIKey, UsersLogin } from "../../apiCalls/user";
+import { UsersLogin } from "../../apiCalls/user";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -38,22 +38,19 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    let valid = true;
+    let valid = false;
     const newErrors = { username: "", password: "" };
     handleOpen();
     // const apiKeyResponse = await GenerateAPIKey();
     // console.log(apiKeyResponse);
-    const loginResponse = await UsersLogin(details.username, details.password);
+    const loginResponse = await UsersLogin(
+      details.username.toLowerCase(),
+      details.password
+    );
     handleClose();
     console.log(loginResponse);
-    if (!details.username) {
-      newErrors.username = "This email address does not exist.";
-      valid = false;
-    }
-
-    if (!details.password) {
-      newErrors.password = "The password you entered is incorrect.";
-      valid = false;
+    if (loginResponse.status === 200) {
+      valid = true;
     }
 
     setErrors(newErrors);
@@ -64,12 +61,14 @@ const Login = () => {
         email: "dangaanthony023@gmail.com",
         bio: "",
         matricNo: "210904107",
-        level: "300"
+        current_level: "300"
       });
       // Proceed with actual login logic here
       navigate("/dashboard");
     }
   };
+
+  const isFormValid = details.username && details.password;
 
   return (
     <div className="w-full h-full place-items-center bg-white font-GeneralSans">
@@ -147,6 +146,7 @@ const Login = () => {
               size="default"
               onClick={handleLogin}
               className="bg-main text-[18px] rounded-lg text-white w-full"
+              disabled={!isFormValid}
             >
               Login
             </Button>

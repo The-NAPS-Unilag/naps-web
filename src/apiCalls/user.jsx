@@ -18,7 +18,8 @@ const GenerateAPIKey = async () => {
       {
         headers: {
           Accept: "application/json",
-          "Content-Type": "application/json;charset=UTF-8"
+          "Content-Type": "application/json;charset=UTF-8",
+          "x-api-key": apiKey
         }
       }
     );
@@ -52,22 +53,23 @@ const GenerateAPIKey = async () => {
   }
 };
 
-const UsersCreate = async (email, current_level, matric_no, password) => {
+const UsersCreate = async (data) => {
   const MySwal = withReactContent(Swal);
   const url = `${apiUrl}/users`;
-  const data = {
-    email,
-    current_level,
-    matric_no,
-    password
-  };
+  // const data = {
+  //   email,
+  //   current_level,
+  //   matric_no,
+  //   password
+  // };
 
   console.log(data);
   try {
     const postsData = await axios.post(url, data, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     console.log(postsData);
@@ -97,6 +99,7 @@ const UsersCreate = async (email, current_level, matric_no, password) => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 
@@ -113,7 +116,8 @@ const UsersConfirmEmail = async (email, otp) => {
     const postsData = await axios.post(url, data, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     console.log(postsData);
@@ -142,6 +146,7 @@ const UsersConfirmEmail = async (email, otp) => {
       if (err?.response?.data?.message === "Unauthorized Access") {
         window.location.replace("/");
       }
+      return err.message;
     });
   }
 };
@@ -158,7 +163,8 @@ const UsersResendOTP = async (email) => {
     const postsData = await axios.post(url, data, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     console.log(postsData);
@@ -235,6 +241,7 @@ const UsersLogin = async (email, password) => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 
@@ -251,7 +258,8 @@ const UsersLoginMatric = async (matric_no, password) => {
     const postsData = await axios.post(url, data, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     console.log(postsData);
@@ -296,7 +304,8 @@ const UsersForgotPassword = async (email) => {
     const postsData = await axios.post(url, data, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     console.log(postsData);
@@ -343,7 +352,8 @@ const UsersResetPassword = async (email, otp, new_password) => {
     const postsData = await axios.post(url, data, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     console.log(postsData);
@@ -388,7 +398,8 @@ const UsersUpdate = async (userData) => {
     const postsData = await axios.put(url, data, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     console.log(postsData);
@@ -431,7 +442,8 @@ const UsersGetById = async (user_id) => {
     const getsData = await axios.get(url, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     return getsData;
@@ -465,7 +477,8 @@ const UsersGets = async () => {
     const getsData = await axios.get(url, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     return getsData;
@@ -499,7 +512,8 @@ const UsersDelete = async (user_id) => {
     const getsData = await axios.delete(url, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey
       }
     });
     return getsData;

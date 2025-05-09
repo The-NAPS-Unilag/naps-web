@@ -63,7 +63,7 @@ const Dashboard = () => {
           </div>
           <div className="text-[#5B5C60] flex space-x-2 text-[14px] font-GeneralSans-Medium capitalize items-center">
             <p>Matric No: {user.matricNo}</p>
-            <p>Level: {user.level}</p>
+            <p>Level: {user.current_level}</p>
           </div>
         </div>
         <div className="mt-4 p-6">

@@ -4,6 +4,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
+import { UsersConfirmEmail, UsersResendOTP } from "../../apiCalls/user";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const VerifyAccount = () => {
   const [details, setDetails] = useState({
@@ -16,8 +22,17 @@ const VerifyAccount = () => {
   const [from, setFrom] = useState("");
   const [trialsLeft, setTrialsLeft] = useState(3);
 
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   const navigate = useNavigate();
   const location = useLocation();
+  const MySwal = withReactContent(Swal);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -29,21 +44,35 @@ const VerifyAccount = () => {
     }
   }, [location.search]);
 
-  const handleSend = () => {
-    let valid = true;
+  const handleSend = async () => {
+    let valid = false;
     const newErrors = { otp: "" };
-
-    if (!details.otp) {
-      newErrors.otp = "This is a wrong code";
-      valid = false;
-      setTrialsLeft((prev) => Math.max(prev - 1, 0));
+    handleOpen();
+    // const apiKeyResponse = await GenerateAPIKey();
+    // console.log(apiKeyResponse);
+    const verifyResponse = await UsersConfirmEmail(
+      userEmail.toLowerCase(),
+      details.otp
+    );
+    handleClose();
+    console.log(verifyResponse);
+    if (verifyResponse?.status === 200) {
+      valid = true;
     }
+
+    setErrors(newErrors);
+
+    // if (!details.otp) {
+    //   newErrors.otp = "This is a wrong code";
+    //   valid = false;
+    //   setTrialsLeft((prev) => Math.max(prev - 1, 0));
+    // }
 
     setErrors(newErrors);
 
     if (valid) {
       if (from === "fp") {
-        navigate("/login");
+        navigate(`/resetPassword?email=${userEmail}`);
       } else if (from === "su") {
         navigate("/dashboard");
       } else {
@@ -51,6 +80,26 @@ const VerifyAccount = () => {
       }
     }
   };
+
+  const resendOTP = async () => {
+    handleOpen();
+    // let valid = false;
+    // const apiKeyResponse = await GenerateAPIKey();
+    // console.log(apiKeyResponse);
+    const resendResponse = await UsersResendOTP(userEmail.toLowerCase());
+    handleClose();
+    console.log(resendResponse);
+    if (resendResponse.status === 200) {
+      setTrialsLeft((prev) => Math.max(prev - 1, 0));
+
+      MySwal.fire({
+        title: "SUCCESS",
+        icon: "success",
+        text: resendResponse.data.message
+      });
+    }
+  };
+  const isFormValid = details.otp;
 
   return (
     <div className="w-full h-full place-items-center bg-white font-GeneralSans">
@@ -78,14 +127,26 @@ const VerifyAccount = () => {
               {errors.otp && (
                 <p className="text-red-500 text-xs">{errors.otp}</p>
               )}
-              <div
-                className={`font-GeneralSans-Medium text-xs w-full text-end ${
-                  trialsLeft < 2 ? "text-red-500" : "text-gray-500"
-                }`}
-              >
-                <p>
-                  {trialsLeft} Trial{trialsLeft !== 1 ? "s" : ""} Left
-                </p>
+              <div className="w-full flex items-center justify-between">
+                {trialsLeft > 0 ? (
+                  <div
+                    onClick={() => resendOTP()}
+                    className="text-main inline-block font-GeneralSans hover:border-b hover:border-main cursor-pointer"
+                  >
+                    Resend
+                  </div>
+                ) : (
+                  <div></div>
+                )}
+                <div
+                  className={`font-GeneralSans-Medium text-xs text-end ${
+                    trialsLeft < 2 ? "text-red-500" : "text-gray-500"
+                  }`}
+                >
+                  <p>
+                    {trialsLeft} Trial{trialsLeft !== 1 ? "s" : ""} Left
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -95,12 +156,20 @@ const VerifyAccount = () => {
               size="default"
               onClick={handleSend}
               className="bg-main text-[18px] rounded-lg text-white w-full"
+              disabled={!isFormValid}
             >
               Verify
             </Button>
           </div>
         </div>
       </div>
+      <Backdrop
+        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+        open={open}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 };

@@ -25,18 +25,46 @@ import {
 // import { useNavigate } from "react-router-dom";
 import { Edit2Icon, Save } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { UsersUpdate } from "../apiCalls/user";
 
 const ProfileOverview = () => {
   //   const navigate = useNavigate();
   const [editVerification, setEditVerification] = useState(false);
   const [editPersonal, setEditPersonal] = useState(false);
-  const { user, setUser } = useAuth();
-
+  const { user, setUser, login } = useAuth();
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
   const [details, setDetails] = useState(user);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setUser(details);
-    console.log("saved");
+    let valid = false;
+    handleOpen();
+    console.log(details);
+    // const apiKeyResponse = await GenerateAPIKey();
+    // console.log(apiKeyResponse);
+    const updateResponse = await UsersUpdate({
+      current_level: details.curent_level,
+      profile_picture: details?.profile_picture,
+      bio: details.bio
+    });
+    handleClose();
+    console.log(updateResponse);
+    if (updateResponse.status === 200) {
+      valid = true;
+    }
+
+    if (valid) {
+      login(updateResponse.data);
+    }
+    console.log("created");
   };
 
   const Alert = ({ children, action }) => {
@@ -185,6 +213,13 @@ const ProfileOverview = () => {
           </div>
         </div>
       </div>
+      <Backdrop
+        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+        open={open}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 };

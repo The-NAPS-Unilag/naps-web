@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from "react";
+// import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,7 @@ import ImageSelector from "../../../components/ImageSelector";
 
 const VerificationDetails = ({ details, setDetails, setStep }) => {
   const navigate = useNavigate();
+  const isFormValid = details.matricNo && details.level;
 
   return (
     <div>
@@ -84,6 +85,7 @@ const VerificationDetails = ({ details, setDetails, setStep }) => {
           size="default"
           onClick={() => setStep(3)}
           className="bg-main text-[18px] rounded-lg text-white w-full"
+          disabled={!isFormValid}
         >
           Next
         </Button>

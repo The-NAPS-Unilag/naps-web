@@ -28,8 +28,8 @@ const navItems = [
   },
   {
     name: "Resources",
-    bg: "#FDEEF1",
-    color: "#EA526F",
+    bg: "#FFF7E7",
+    color: "#FFAD0D",
     activeImg: BooksActive,
     img: Books,
     path: "/resources"
@@ -52,8 +52,8 @@ const navItems = [
   },
   {
     name: "Upcoming Events",
-    bg: "#FDEEF1",
-    color: "#EA526F",
+    bg: "#F0EAF4",
+    color: "#662C91",
     activeImg: EventsActive,
     img: Events,
     path: "/upcoming-events"

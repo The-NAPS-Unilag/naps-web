@@ -25,20 +25,51 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Edit2Icon, Eye, EyeClosed, Save } from "lucide-react";
 import ImageSelector from "../../../components/ImageSelector";
+import { useAuth } from "../../../context/AuthContext";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+import { UsersCreate } from "../../../apiCalls/user";
 
 const ReviewDetails = ({ details, setDetails }) => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [editVerification, setEditVerification] = useState(false);
   const [editPersonal, setEditPersonal] = useState(false);
-
+  const { login } = useAuth();
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
     console.log(details);
   };
 
-  const handleCreateAccount = () => {
-    navigate(`/verifyAccount?fm=su&email=${details.email}`);
+  const handleCreateAccount = async () => {
+    let valid = false;
+    handleOpen();
+    console.log(details);
+    // const apiKeyResponse = await GenerateAPIKey();
+    // console.log(apiKeyResponse);
+    const signupResponse = await UsersCreate({
+      email: details.email.toLowerCase(),
+      current_level: details.level,
+      matric_no: details.matricNo,
+      password: details.password
+    });
+    handleClose();
+    console.log(signupResponse);
+    if (signupResponse.status === 201) {
+      valid = true;
+    }
+
+    if (valid) {
+      login(signupResponse.data);
+      navigate(`/verifyAccount?fm=su&email=${details.email}`);
+    }
     console.log("created");
   };
 
@@ -89,6 +120,14 @@ const ReviewDetails = ({ details, setDetails }) => {
     number: /[0-9]/.test(details.password),
     specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(details.password)
   };
+
+  const isPasswordValid = Object.values(validations).every(Boolean);
+  const isFormValid =
+    details.name &&
+    details.email &&
+    isPasswordValid &&
+    details.matricNo &&
+    details.level;
 
   return (
     <div>
@@ -293,7 +332,7 @@ const ReviewDetails = ({ details, setDetails }) => {
           <Button
             variant="ghost"
             size="default"
-            disabled={editPersonal || editVerification}
+            disabled={editPersonal || editVerification || !isFormValid}
             className="bg-main text-[18px] rounded-lg text-white w-full"
           >
             Create an account
@@ -312,6 +351,13 @@ const ReviewDetails = ({ details, setDetails }) => {
           </div>
         </div>
       </div>
+      <Backdrop
+        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+        open={open}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 };

@@ -4,6 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { UsersForgotPassword } from "../../apiCalls/user";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ForgotPassword = () => {
   const [details, setDetails] = useState({
@@ -12,16 +15,29 @@ const ForgotPassword = () => {
   const [errors, setErrors] = useState({
     username: ""
   });
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   const navigate = useNavigate();
 
-  const handleSend = () => {
-    let valid = true;
+  const handleSend = async () => {
+    let valid = false;
     const newErrors = { username: "", password: "" };
-
-    if (!details.username) {
-      newErrors.username = "This email address does not exist.";
-      valid = false;
+    handleOpen();
+    // const apiKeyResponse = await GenerateAPIKey();
+    // console.log(apiKeyResponse);
+    const forgotPasswordResponse = await UsersForgotPassword(
+      details.username.toLowerCase()
+    );
+    handleClose();
+    console.log(forgotPasswordResponse);
+    if (forgotPasswordResponse?.status === 200) {
+      valid = true;
     }
 
     setErrors(newErrors);
@@ -31,6 +47,7 @@ const ForgotPassword = () => {
       navigate(`/verifyAccount?fm=fp&email=${details.username}`);
     }
   };
+  const isFormValid = details.username;
 
   return (
     <div className="w-full h-full place-items-center bg-white font-GeneralSans">
@@ -72,12 +89,20 @@ const ForgotPassword = () => {
               size="default"
               onClick={handleSend}
               className="bg-main text-[18px] rounded-lg text-white w-full"
+              disabled={!isFormValid}
             >
               Send OTP
             </Button>
           </div>
         </div>
       </div>
+      <Backdrop
+        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+        open={open}
+        onClick={handleClose}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 };

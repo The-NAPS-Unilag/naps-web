@@ -24,7 +24,8 @@ const PersonalDetails = ({ details, setDetails, setStep }) => {
     specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(details.password)
   };
 
-  // const isPasswordValid = Object.values(validations).every(Boolean);
+  const isPasswordValid = Object.values(validations).every(Boolean);
+  const isFormValid = details.name && details.email && isPasswordValid;
 
   return (
     <div>
@@ -78,7 +79,7 @@ const PersonalDetails = ({ details, setDetails, setStep }) => {
                 setDetails({ ...details, password: e.target.value })
               }
               id="password"
-              placeholder="Email Address"
+              placeholder="Password"
             />
             <div
               onClick={togglePasswordVisibility}
@@ -137,6 +138,7 @@ const PersonalDetails = ({ details, setDetails, setStep }) => {
           size="default"
           onClick={() => setStep(2)}
           className="bg-main text-[18px] rounded-lg text-white w-full"
+          disabled={!isFormValid}
         >
           Next
         </Button>
