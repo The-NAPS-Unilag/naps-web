@@ -13,13 +13,13 @@ import CircularProgress from "@mui/material/CircularProgress";
 const Login = () => {
   const [details, setDetails] = useState({
     username: "",
-    password: ""
+    password: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({
     username: "",
-    password: ""
+    password: "",
   });
 
   const { login } = useAuth();
@@ -61,7 +61,7 @@ const Login = () => {
         email: "dangaanthony023@gmail.com",
         bio: "",
         matricNo: "210904107",
-        current_level: "300"
+        current_level: "300",
       });
       // Proceed with actual login logic here
       navigate("/dashboard");
@@ -71,7 +71,7 @@ const Login = () => {
   const isFormValid = details.username && details.password;
 
   return (
-    <div className="w-full h-full place-items-center bg-white font-GeneralSans">
+    <div className="w-full h-full place-items-center pt-4 bg-white font-GeneralSans">
       <Navbar />
       <div className="relative m-4 w-full max-w-full px-4 sm:w-[500px] sm:max-w-[500px] text-text_grey">
         <div>
