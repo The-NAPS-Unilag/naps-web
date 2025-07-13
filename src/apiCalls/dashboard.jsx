@@ -7,16 +7,15 @@ const apiUrl = import.meta.env.VITE_APP_TIMANISHE_URL;
 
 const GetCards = async () => {
   const MySwal = withReactContent(Swal);
-  const url = `${apiUrl}/dashboard/getCards`;
 
-  console.log(url);
+  console.log(apiUrl);
 
   try {
-    const getsData = await axios.get(url, {
+    const getsData = await axios.get(apiUrl, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
-      }
+        "Content-Type": "application/json;charset=UTF-8",
+      },
     });
     return getsData;
   } catch (err) {
@@ -24,7 +23,7 @@ const GetCards = async () => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -49,8 +48,8 @@ const GetSalesVsRent = async () => {
     const getsData = await axios.get(url, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
-      }
+        "Content-Type": "application/json;charset=UTF-8",
+      },
     });
     return getsData;
   } catch (err) {
@@ -58,7 +57,7 @@ const GetSalesVsRent = async () => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -83,8 +82,8 @@ const GetRecentProperties = async () => {
     const getsData = await axios.get(url, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
-      }
+        "Content-Type": "application/json;charset=UTF-8",
+      },
     });
     return getsData;
   } catch (err) {
@@ -92,7 +91,7 @@ const GetRecentProperties = async () => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -117,8 +116,8 @@ const GetRecentCustomers = async () => {
     const getsData = await axios.get(url, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8"
-      }
+        "Content-Type": "application/json;charset=UTF-8",
+      },
     });
     return getsData;
   } catch (err) {
@@ -126,7 +125,7 @@ const GetRecentCustomers = async () => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
