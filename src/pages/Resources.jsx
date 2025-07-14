@@ -5,7 +5,7 @@ import gridIcon from '../assets/images/ResourceIcons/gridIcon.svg'
 import listIcon from '../assets/images/ResourceIcons/ListIcon.svg'
 import LevelFolder from '../components/resources/LevelFolder'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Outlet } from 'react-router-dom'
 
 export default function Resources() {
     const [listView, setListView] = useState(true)
@@ -64,8 +64,9 @@ export default function Resources() {
                     </div>
                 </div>
 
+                <Outlet context={listView} />
                 {/* Level folders */}
-                <div className={`mt-8 mx-8 ${listView ? 'flex flex-col divide-y divide-[#CACDD5] gap-0 border border-[#CACDD5] rounded-lg' : 'flex gap-2 '}`}>
+                {/* <div className={`mt-8 mx-8 ${listView ? 'flex flex-col divide-y divide-[#CACDD5] gap-0 border border-[#CACDD5] rounded-lg' : 'flex gap-2 '}`}>
                     {listView && <p className="font-GeneralSans-Semibold py-3 px-6">Name</p>}
 
                     <LevelFolder title={'100 Level'} listView={listView} path={'100l'}/>
@@ -73,7 +74,7 @@ export default function Resources() {
                     <LevelFolder title={'300 Level'} listView={listView} path={'300l'}/>
                     <LevelFolder title={'400 Level'} listView={listView} path={'400l'}/>
                     <LevelFolder title={'ICE'} listView={listView} path={'ICE'}/>
-                </div>
+                </div> */}
 
             </div>  
         </>
