@@ -15,7 +15,7 @@ import UpcomingEvents from "./pages/upcomingEvents";
 import Resources from "./pages/Resources";
 // import Resources from "./pages/Resources";
 // import Forums from "./pages/Forums";
-import MentorProgram from "./pages/MentorProgram";
+// import MentorProgram from "./pages/MentorProgram";
 import AddResource from "./components/resources/AddResource";
 import ResourceLevels from "./components/resources/ResourceLevels";
 import ResourceFiles from "./components/resources/ResourceFiles";
@@ -45,13 +45,13 @@ function App() {
             }
           >
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="resources" element={<Resources />} >
-                <Route index element={<ResourceLevels />} />
-                <Route path="/resources:level" element={<ResourceFiles />} />
-                <Route path="/resources/addResource" element={<AddResource />} />
+            <Route path="resources" element={<Resources />}>
+              <Route index element={<ResourceLevels />} />
+              <Route path="/resources:level" element={<ResourceFiles />} />
+              <Route path="/resources/addResource" element={<AddResource />} />
             </Route>
             {/*<Route path="forums" element={<Forums />} /> */}
-            <Route path="mentor-program" element={<MentorProgram />} /> 
+            {/* <Route path="mentor-program" element={<MentorProgram />} /> */}
             <Route path="upcoming-events" element={<UpcomingEvents />} />
             <Route path="profile-overview" element={<ProfileOverview />} />
           </Route>

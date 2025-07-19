@@ -9,7 +9,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import {
   AlertDialog,
@@ -20,7 +20,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 // import { useNavigate } from "react-router-dom";
 import { Edit2Icon, Save } from "lucide-react";
@@ -53,7 +53,7 @@ const ProfileOverview = () => {
     const updateResponse = await UsersUpdate({
       current_level: details.curent_level,
       profile_picture: details?.profile_picture,
-      bio: details.bio
+      bio: details.bio,
     });
     handleClose();
     console.log(updateResponse);

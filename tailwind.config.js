@@ -1,5 +1,8 @@
 /* eslint-disable no-undef */
-/** @type {import('tailwindcss').Config} */
+// /** @type {import('tailwindcss').Config} */
+
+const plugin = require('tailwindcss/plugin');
+const animate = require('tailwindcss-animate');
 export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
@@ -69,5 +72,19 @@ export default {
       }
     }
   },
-  plugins: [require("tailwindcss-animate")]
+  plugins: [
+    animate,
+    plugin(({ addVariant, e }) => {
+      addVariant('user-invalid', ({ modifySelectors, separator }) => {
+        modifySelectors(({ className }) =>
+          `.${e(`user-invalid${separator}${className}`)}:user-invalid`
+        )
+      })
+      addVariant('user-valid', ({ modifySelectors, separator }) => {
+        modifySelectors(({ className }) =>
+          `.${e(`user-valid${separator}${className}`)}:user-valid`
+        )
+      })
+    }),
+  ],
 };

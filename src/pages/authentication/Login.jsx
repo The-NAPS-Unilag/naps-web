@@ -49,7 +49,7 @@ const Login = () => {
     );
     handleClose();
     console.log(loginResponse);
-    if (loginResponse.status === 200) {
+    if (loginResponse.status !== 200) {
       valid = true;
     }
 
