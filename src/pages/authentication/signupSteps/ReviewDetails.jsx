@@ -9,7 +9,7 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
 import {
   AlertDialog,
@@ -20,7 +20,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
 import { Edit2Icon, Eye, EyeClosed, Save } from "lucide-react";
@@ -55,10 +55,12 @@ const ReviewDetails = ({ details, setDetails }) => {
     // const apiKeyResponse = await GenerateAPIKey();
     // console.log(apiKeyResponse);
     const signupResponse = await UsersCreate({
+      firstname: details.name.split(" ")[0],
+      lastname: details.name.split(" ")[1] || "",
       email: details.email.toLowerCase(),
       current_level: details.level,
       matric_no: details.matricNo,
-      password: details.password
+      password: details.password,
     });
     handleClose();
     console.log(signupResponse);
@@ -118,7 +120,7 @@ const ReviewDetails = ({ details, setDetails }) => {
     uppercase: /[A-Z]/.test(details.password),
     lowercase: /[a-z]/.test(details.password),
     number: /[0-9]/.test(details.password),
-    specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(details.password)
+    specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(details.password),
   };
 
   const isPasswordValid = Object.values(validations).every(Boolean);

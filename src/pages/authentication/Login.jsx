@@ -47,15 +47,18 @@ const Login = () => {
       details.username.toLowerCase(),
       details.password
     );
-    handleClose();
     console.log(loginResponse);
-    if (loginResponse.status !== 200) {
+    if (loginResponse.status === 200) {
       valid = true;
     }
 
     setErrors(newErrors);
 
     if (valid) {
+      //       const usersResponse = await UsersLogin(
+      //   details.username.toLowerCase(),
+      //   details.password
+      // );
       login({
         name: "Daniel Anthony",
         email: "dangaanthony023@gmail.com",
@@ -66,6 +69,7 @@ const Login = () => {
       // Proceed with actual login logic here
       navigate("/dashboard");
     }
+    handleClose();
   };
 
   const isFormValid = details.username && details.password;
