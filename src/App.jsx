@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Signup from "./pages/authentication/Signup";
 import Login from "./pages/authentication/Login";
-import Dashboard from "./pages/Dashboard";
+// import Dashboard from "./pages/Dashboard";
 import AuthProvider from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Welcome from "./pages/Welcome";
@@ -14,13 +14,14 @@ import ResetPassword from "./pages/authentication/ResetPassword";
 import UpcomingEvents from "./pages/upcomingEvents";
 import Resources from "./pages/Resources";
 // import Resources from "./pages/Resources";
-// import Forums from "./pages/Forums";
-// import MentorProgram from "./pages/MentorProgram";
+import Forums from "./pages/Forums";
+import MentorProgram from "./pages/MentorProgram";
 import AddResource from "./components/resources/AddResource";
 import ResourceLevels from "./components/resources/ResourceLevels";
 import ResourceFiles from "./components/resources/ResourceFiles";
 // import UpcomingEvents from "./pages/UpcomingEvents";
 // import ProfileOverview from "./pages/ProfileOverview";
+import Dashboard from "./components/Dashboard/Dashboard";
 
 function App() {
   return (
@@ -50,8 +51,8 @@ function App() {
               <Route path="/resources:level" element={<ResourceFiles />} />
               <Route path="/resources/addResource" element={<AddResource />} />
             </Route>
-            {/*<Route path="forums" element={<Forums />} /> */}
-            {/* <Route path="mentor-program" element={<MentorProgram />} /> */}
+            <Route path="forums" element={<Forums />} />
+            <Route path="mentor-program" element={<MentorProgram />} />
             <Route path="upcoming-events" element={<UpcomingEvents />} />
             <Route path="profile-overview" element={<ProfileOverview />} />
           </Route>
