@@ -22,6 +22,10 @@ import ResourceFiles from "./components/resources/ResourceFiles";
 // import UpcomingEvents from "./pages/UpcomingEvents";
 // import ProfileOverview from "./pages/ProfileOverview";
 import Dashboard from "./components/Dashboard/Dashboard";
+import ForumHome from "./components/Forums/ForumHome";
+import ForumPost from "./components/Forums/ForumPost";
+import ForumResponse from "./components/Forums/ForumResponse";
+import ForumTopic from "./components/Forums/ForumTopic";
 
 function App() {
   return (
@@ -51,7 +55,12 @@ function App() {
               <Route path="/resources:level" element={<ResourceFiles />} />
               <Route path="/resources/addResource" element={<AddResource />} />
             </Route>
-            <Route path="forums" element={<Forums />} />
+            <Route path="forums" element={<Forums />}>
+                <Route index element={<ForumHome />} />
+                <Route path="/forums/forumPost" element={<ForumPost />} />
+                <Route path="/forums/response" element={<ForumResponse />} />
+                <Route path="/forums/topic/:topic" element={<ForumTopic />} />
+            </Route>
             <Route path="mentor-program" element={<MentorProgram />} />
             <Route path="upcoming-events" element={<UpcomingEvents />} />
             <Route path="profile-overview" element={<ProfileOverview />} />
