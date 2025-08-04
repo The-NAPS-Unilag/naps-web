@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom";
-import backBtn from '../../assets/images/ResourceIcons/CaretLeft.svg'
+import { SlArrowLeft } from "react-icons/sl";
 
-function BackButton() {
+function BackButton({ className }) {
     const navigate = useNavigate(-1);
 
     return (
         <>
-            <button className="flex gap-2 items-center w-[32px] h-[22px] bg-slate-50 border-none p-0" onClick={() => navigate(-1)}>
-                <img src={backBtn} alt="backBtn" />
-                <span className="" >Back</span>
+            <button className={`flex gap-2 items-center bg-slate-50 border-none p-0 ${className}`} onClick={() => navigate(-1)}>
+                <SlArrowLeft className="w-full"/>
+                <p className="" >Back</p>
             </button>
 
         </>
