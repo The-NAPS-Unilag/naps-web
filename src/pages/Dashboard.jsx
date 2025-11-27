@@ -17,36 +17,36 @@ const Dashboard = () => {
       img: Books,
       bg: "#FFF7E7",
       text: "#593D05",
-      path: "/resources"
+      path: "/resources",
     },
     {
       title: "Forums",
       img: Forums,
       bg: "#E6F0F2",
       text: "#01262B",
-      path: "/forums"
+      path: "/forums",
     },
     {
       title: "Mentor Program",
       img: Mentor,
       bg: "#FAFFE8",
       text: "#485909",
-      path: "/mentor"
+      path: "/mentor",
     },
     {
       title: "Profile Overview",
       img: User,
       bg: "#FDEEF1",
       text: "#521D27",
-      path: "/profile-overview"
+      path: "/profile-overview",
     },
     {
       title: "Upcoming Events",
       img: Events,
       bg: "#F0EAF4",
       text: "#240F33",
-      path: "/events"
-    }
+      path: "/events",
+    },
   ];
   return (
     <>
@@ -56,14 +56,14 @@ const Dashboard = () => {
         </p>
         <div className="mt-4">
           <div className="flex space-x-1 text-[24px] text-main_grey font-GeneralSans-Semibold capitalize items-center">
-            <p>Welcome, {user.name}</p>
+            <p>Welcome, {`${user?.firstname || ""} ${user?.lastname || ""}`}</p>
             <div className="rounded-full h-[24px] w-[24px] flex items-center justify-center bg-[#7C9910]">
               <img src={ChalkboardTeacherSmall} />
             </div>
           </div>
           <div className="text-[#5B5C60] flex space-x-2 text-[14px] font-GeneralSans-Medium capitalize items-center">
-            <p>Matric No: {user.matricNo}</p>
-            <p>Level: {user.current_level}</p>
+            <p>Matric No: {user?.matricNo}</p>
+            <p>Level: {user?.current_level}</p>
           </div>
         </div>
         <div className="mt-4 p-6">
@@ -76,7 +76,7 @@ const Dashboard = () => {
                 style={{
                   backgroundColor: card.bg,
                   color: card.text, // Default gray-700 color
-                  border: "1px solid"
+                  border: "1px solid",
                 }}
               >
                 <img src={card.img} />

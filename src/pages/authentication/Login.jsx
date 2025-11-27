@@ -53,19 +53,14 @@ const Login = () => {
     }
 
     setErrors(newErrors);
+    const data = loginResponse.data;
 
     if (valid) {
       //       const usersResponse = await UsersLogin(
       //   details.username.toLowerCase(),
       //   details.password
       // );
-      login({
-        name: "Daniel Anthony",
-        email: "dangaanthony023@gmail.com",
-        bio: "",
-        matricNo: "210904107",
-        current_level: "300",
-      });
+      login(data);
       // Proceed with actual login logic here
       navigate("/dashboard");
     }

@@ -6,6 +6,7 @@ import withReactContent from "sweetalert2-react-content";
 const apiUrl = import.meta.env.VITE_APP_NAPS_URL;
 const apiKey =
   "a89fe15dcd5331522b33cf860b62b9066e4e3358702c5fb74cc227fef06f6be1e820450036f3bf0d8986107a3bcf5a54e21ad4a8f0159c75632f2b865f9d75ca";
+const accessToken = localStorage.getItem("accessToken");
 
 const GenerateAPIKey = async () => {
   const MySwal = withReactContent(Swal);
@@ -19,8 +20,8 @@ const GenerateAPIKey = async () => {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json;charset=UTF-8",
-          "x-api-key": apiKey
-        }
+          "x-api-key": apiKey,
+        },
       }
     );
     console.log(postsData);
@@ -38,7 +39,7 @@ const GenerateAPIKey = async () => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -69,8 +70,8 @@ const UsersCreate = async (data) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+      },
     });
     console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
@@ -87,7 +88,7 @@ const UsersCreate = async (data) => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -108,7 +109,7 @@ const UsersConfirmEmail = async (email, otp) => {
   const url = `${apiUrl}/users/confirm`;
   const data = {
     email,
-    otp
+    otp,
   };
 
   console.log(data);
@@ -117,8 +118,8 @@ const UsersConfirmEmail = async (email, otp) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+      },
     });
     console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
@@ -135,7 +136,7 @@ const UsersConfirmEmail = async (email, otp) => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -155,7 +156,7 @@ const UsersResendOTP = async (email) => {
   const MySwal = withReactContent(Swal);
   const url = `${apiUrl}/users/resend-otp`;
   const data = {
-    email
+    email,
   };
 
   console.log(data);
@@ -164,8 +165,8 @@ const UsersResendOTP = async (email) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+      },
     });
     console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
@@ -182,7 +183,7 @@ const UsersResendOTP = async (email) => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -202,7 +203,7 @@ const UsersLogin = async (email, password) => {
   const url = `${apiUrl}/users/login`;
   const data = {
     email,
-    password
+    password,
   };
 
   console.log(data);
@@ -211,8 +212,8 @@ const UsersLogin = async (email, password) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+      },
     });
     console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
@@ -229,7 +230,7 @@ const UsersLogin = async (email, password) => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -250,7 +251,7 @@ const UsersLoginMatric = async (matric_no, password) => {
   const url = `${apiUrl}/users/login/matric`;
   const data = {
     matric_no,
-    password
+    password,
   };
 
   console.log(data);
@@ -259,8 +260,8 @@ const UsersLoginMatric = async (matric_no, password) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+      },
     });
     console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
@@ -277,7 +278,7 @@ const UsersLoginMatric = async (matric_no, password) => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -296,7 +297,7 @@ const UsersForgotPassword = async (email) => {
   const MySwal = withReactContent(Swal);
   const url = `${apiUrl}/users/forgot-password`;
   const data = {
-    email
+    email,
   };
 
   console.log(data);
@@ -305,8 +306,8 @@ const UsersForgotPassword = async (email) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+      },
     });
     console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
@@ -323,7 +324,7 @@ const UsersForgotPassword = async (email) => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -344,7 +345,7 @@ const UsersResetPassword = async (email, otp, new_password) => {
   const data = {
     email,
     otp,
-    new_password
+    new_password,
   };
 
   console.log(data);
@@ -353,8 +354,8 @@ const UsersResetPassword = async (email, otp, new_password) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+      },
     });
     console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
@@ -371,7 +372,7 @@ const UsersResetPassword = async (email, otp, new_password) => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -386,23 +387,32 @@ const UsersResetPassword = async (email, otp, new_password) => {
   }
 };
 
-const UsersUpdate = async (userData) => {
+const UsersUpdate = async (id, data) => {
   const MySwal = withReactContent(Swal);
-  const url = `${apiUrl}/users/${userData.id}`;
-  const data = {
-    ...userData
-  };
+  const url = `${apiUrl}/users/update/${id}`;
+  // const data = {
+  //   ...userData,
+  // };
 
   console.log(data);
+  console.log("accessToken", accessToken);
   try {
     const postsData = await axios.put(url, data, {
       headers: {
         Accept: "application/json",
-        "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "Content-Type": "multipart/form-data",
+        "x-api-key": apiKey,
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
     console.log(postsData);
+    if (postsData.status === 200) {
+      MySwal.fire({
+        title: "Success",
+        icon: "success",
+        text: postsData.data.message || "User updated successfully",
+      });
+    }
     // if (postsData.status !== 201 || postsData.status !== 200) {
     //   MySwal.fire({
     //     title: postsData.AxiosError.code,
@@ -413,11 +423,11 @@ const UsersUpdate = async (userData) => {
 
     return postsData;
   } catch (err) {
-    console.log(err.message);
+    console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -443,8 +453,9 @@ const UsersGetById = async (user_id) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
     return getsData;
   } catch (err) {
@@ -452,7 +463,7 @@ const UsersGetById = async (user_id) => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -478,8 +489,8 @@ const UsersGets = async () => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+      },
     });
     return getsData;
   } catch (err) {
@@ -487,7 +498,7 @@ const UsersGets = async () => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -513,8 +524,8 @@ const UsersDelete = async (user_id) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey
-      }
+        "x-api-key": apiKey,
+      },
     });
     return getsData;
   } catch (err) {
@@ -522,7 +533,7 @@ const UsersDelete = async (user_id) => {
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
-      text: err?.response?.data?.message || err.message
+      text: err?.response?.data?.message || err.message,
     }).then(() => {
       if (err?.response?.data?.message === "Expired Access") {
         window.location.replace("/");
@@ -549,5 +560,5 @@ export {
   UsersLoginMatric,
   UsersResendOTP,
   UsersResetPassword,
-  GenerateAPIKey
+  GenerateAPIKey,
 };

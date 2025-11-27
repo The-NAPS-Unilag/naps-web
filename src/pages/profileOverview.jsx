@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -27,7 +27,8 @@ import { Edit2Icon, Save } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { UsersUpdate } from "../apiCalls/user";
+import { UsersGetById, UsersUpdate } from "../apiCalls/user";
+import { UploadCloud, User } from "lucide-react";
 
 const ProfileOverview = () => {
   //   const navigate = useNavigate();
@@ -41,7 +42,17 @@ const ProfileOverview = () => {
   const handleOpen = () => {
     setOpen(true);
   };
-  const [details, setDetails] = useState(user);
+  console.log(user);
+  const [details, setDetails] = useState({});
+  // File validation and preview logic
+  const [imagePreview, setImagePreview] = useState(
+    details?.profile_picture || null
+  );
+  const [image, setImage] = useState(null);
+
+  useEffect(() => {
+    setDetails(user || {});
+  }, [user]);
 
   const handleSave = async () => {
     setUser(details);
@@ -50,21 +61,47 @@ const ProfileOverview = () => {
     console.log(details);
     // const apiKeyResponse = await GenerateAPIKey();
     // console.log(apiKeyResponse);
-    const updateResponse = await UsersUpdate({
-      current_level: details.curent_level,
-      profile_picture: details?.profile_picture,
-      bio: details.bio,
-    });
-    handleClose();
+    const formData = new FormData();
+    formData.append("current_level", details.current_level);
+    formData.append("profile_picture", image);
+    formData.append("bio", details.bio);
+    const updateResponse = await UsersUpdate(user?.id, formData);
+
     console.log(updateResponse);
     if (updateResponse.status === 200) {
       valid = true;
     }
 
     if (valid) {
-      login(updateResponse.data);
+      const getUserData = await UsersGetById(user?.id);
+      if (getUserData.status === 200) {
+        login({ user: getUserData.data });
+      }
     }
+    handleClose();
     console.log("created");
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      alert("Please select a valid image.");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image size should be less than 2MB.");
+      return;
+    }
+    setImage(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result);
+      setDetails({ ...details, profile_picture: reader.result });
+    };
+    reader.readAsDataURL(file);
   };
 
   const Alert = ({ children, action }) => {
@@ -136,6 +173,38 @@ const ProfileOverview = () => {
                 </div>
               )}
             </div>
+            <div className="flex flex-col items-center my-6">
+              <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-[#BB4259] shadow-lg bg-gray-100 flex items-center justify-center">
+                {imagePreview ? (
+                  <img
+                    src={imagePreview}
+                    alt="Profile Preview"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <User className="w-20 h-20 text-gray-400" />
+                )}
+              </div>
+              {editPersonal && (
+                <div className="mt-3">
+                  <label
+                    htmlFor="profilePicUpload"
+                    className="cursor-pointer flex items-center gap-2 text-sm text-[#BB4259]"
+                  >
+                    <UploadCloud size={18} />
+                    <span>Upload Profile Picture</span>
+                  </label>
+                  <input
+                    type="file"
+                    id="profilePicUpload"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </div>
+              )}
+            </div>
+
             <div className="space-y-2 mb-3">
               <Label htmlFor="name" className="font-GeneralSans-Medium">
                 Name
@@ -143,10 +212,18 @@ const ProfileOverview = () => {
               <Input
                 type="text"
                 id="name"
-                value={details.name}
-                disabled={!editPersonal}
+                value={
+                  details.firstname
+                    ? `${details.firstname} ${details.lastname}`
+                    : ""
+                }
+                disabled
                 onChange={(e) =>
-                  setDetails({ ...details, name: e.target.value })
+                  setDetails({
+                    ...details,
+                    firstname: e.target.value.split(" ")[0],
+                    lastname: e.target.value.split(" ")[1] || "",
+                  })
                 }
                 placeholder="Name"
               />
@@ -156,14 +233,14 @@ const ProfileOverview = () => {
                 Bio
               </Label>
               <textarea
-                value={details.bio}
+                value={details?.bio || ""}
                 disabled={!editPersonal}
                 onChange={(e) =>
                   setDetails({ ...details, bio: e.target.value })
                 }
                 rows={5}
                 placeholder="Tell us about yourself..."
-                className="w-full p-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                className="w-full p-4 rounded-lg border bg-transparent border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
               />
             </div>
           </div>
@@ -180,10 +257,11 @@ const ProfileOverview = () => {
               <Input
                 type="text"
                 id="matric"
-                value={details.matricNo}
-                disabled={!editVerification}
+                value={details.matric_no || ""}
+                // readOnly
+                disabled
                 onChange={(e) =>
-                  setDetails({ ...details, matricNo: e.target.value })
+                  setDetails({ ...details, matric_no: e.target.value })
                 }
                 placeholder="Enter your Matric Number"
               />
@@ -193,9 +271,9 @@ const ProfileOverview = () => {
                 Current Level
               </Label>
               <Select
-                value={details.level}
+                value={details.current_level || ""}
                 onValueChange={(value) =>
-                  setDetails({ ...details, level: value })
+                  setDetails({ ...details, current_level: value })
                 }
                 disabled={!editVerification}
               >

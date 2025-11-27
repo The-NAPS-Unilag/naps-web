@@ -11,7 +11,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "../context/AuthContext";
 import Backdrop from "@mui/material/Backdrop";
@@ -20,7 +20,11 @@ import Filter from "../assets/images/upcomingEventsIcons/Filter.png";
 import Location from "../assets/images/upcomingEventsIcons/Location.png";
 import CalendarDots from "../assets/images/upcomingEventsIcons/CalendarDots.png";
 import Time from "../assets/images/upcomingEventsIcons/Time.png";
-import { CalendarMinus2, CalendarPlus2Icon, CheckCircle2 } from "lucide-react";
+import {
+  CheckCircle2,
+  // MinusIcon,
+  // PlusIcon,
+} from "lucide-react";
 import UpcomingSmall1 from "../assets/images/upcomingSmall1.png";
 import UpcomingSmall2 from "../assets/images/upcomingSmall2.png";
 import ArrowBack from "../assets/images/upcomingEventsIcons/ArrowBack.png";
@@ -28,6 +32,7 @@ import SadFace from "../assets/images/upcomingEventsIcons/SadFace.png";
 import UpcomingBig1 from "../assets/images/UpcomingBig1.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import { UsersUpdate } from "../apiCalls/user";
+import AddToCalendarDropdown from "../components/AddToCalendar";
 
 const UpcomingEvents = () => {
   const { user, setUser, login } = useAuth();
@@ -49,7 +54,7 @@ const UpcomingEvents = () => {
       added: false,
       image: UpcomingSmall2,
       description:
-        "Welcome to the Department of Psychology’s Orientation event! This is your first step into the fascinating world of psychology, and we are thrilled to have you with us. Whether you’re starting your journey as a psychology major or simply exploring your interests, this event is designed to introduce you to everything the department has to offer.\n\nDuring the orientation, you’ll get an overview of the department’s academic programs, research opportunities, and resources available to support your studies. You'll meet faculty members, current students, and advisors who will guide you through your time in the department. Additionally, we’ll provide insights into the various areas of psychology you can explore, from clinical and cognitive psychology to social and behavioral studies.\n\nGet ready for an exciting start to your academic adventure, and let’s set the stage for your success in understanding the mind, behavior, and everything in between!"
+        "Welcome to the Department of Psychology’s Orientation event! This is your first step into the fascinating world of psychology, and we are thrilled to have you with us. Whether you’re starting your journey as a psychology major or simply exploring your interests, this event is designed to introduce you to everything the department has to offer.\n\nDuring the orientation, you’ll get an overview of the department’s academic programs, research opportunities, and resources available to support your studies. You'll meet faculty members, current students, and advisors who will guide you through your time in the department. Additionally, we’ll provide insights into the various areas of psychology you can explore, from clinical and cognitive psychology to social and behavioral studies.\n\nGet ready for an exciting start to your academic adventure, and let’s set the stage for your success in understanding the mind, behavior, and everything in between!",
     },
     {
       id: 2,
@@ -61,7 +66,7 @@ const UpcomingEvents = () => {
       added: true,
       image: UpcomingSmall1,
       description:
-        "Unlock your professional potential at the Career Development Workshop. This interactive session is tailored for students seeking to gain clarity and confidence in their career paths. Whether you're exploring job options, preparing for internships, or refining your personal brand, this workshop offers practical tools and strategies to move you forward.\n\nParticipants will engage with career counselors, industry professionals, and alumni who will share insights on resume writing, interview skills, networking techniques, and effective job search practices. You’ll also explore how to leverage your academic experience and personal interests to build a fulfilling and impactful career. Come ready to learn, connect, and take charge of your future."
+        "Unlock your professional potential at the Career Development Workshop. This interactive session is tailored for students seeking to gain clarity and confidence in their career paths. Whether you're exploring job options, preparing for internships, or refining your personal brand, this workshop offers practical tools and strategies to move you forward.\n\nParticipants will engage with career counselors, industry professionals, and alumni who will share insights on resume writing, interview skills, networking techniques, and effective job search practices. You’ll also explore how to leverage your academic experience and personal interests to build a fulfilling and impactful career. Come ready to learn, connect, and take charge of your future.",
     },
     {
       id: 3,
@@ -73,7 +78,7 @@ const UpcomingEvents = () => {
       added: false,
       image: UpcomingSmall2,
       description:
-        "Start your semester on a lively note with the Departmental Welcome Hangout—a casual, fun-filled gathering aimed at helping new and returning students connect. It’s more than just a social event; it’s an opportunity to foster friendships, meet lecturers in an informal setting, and learn about student-led initiatives and groups within the department.\n\nExpect games, music, refreshments, and engaging conversations that make you feel part of a community. Whether you're an introvert, extrovert, or somewhere in between, this relaxed environment offers a great way to break the ice and enjoy the vibrant culture of our department."
+        "Start your semester on a lively note with the Departmental Welcome Hangout—a casual, fun-filled gathering aimed at helping new and returning students connect. It’s more than just a social event; it’s an opportunity to foster friendships, meet lecturers in an informal setting, and learn about student-led initiatives and groups within the department.\n\nExpect games, music, refreshments, and engaging conversations that make you feel part of a community. Whether you're an introvert, extrovert, or somewhere in between, this relaxed environment offers a great way to break the ice and enjoy the vibrant culture of our department.",
     },
     {
       id: 4,
@@ -85,7 +90,7 @@ const UpcomingEvents = () => {
       added: false,
       image: UpcomingSmall1,
       description:
-        "If you're planning to apply for scholarships, don't miss this essential training session. The Scholarship Interview Training is designed to help you prepare confidently and competently for competitive academic opportunities. This session will cover common interview questions, how to present your achievements persuasively, and how to articulate your academic and career goals effectively.\n\nYou’ll participate in mock interviews, receive personalized feedback, and hear from past scholarship recipients who will share their success strategies. It’s an empowering experience that sharpens your communication skills and enhances your chances of standing out among applicants."
+        "If you're planning to apply for scholarships, don't miss this essential training session. The Scholarship Interview Training is designed to help you prepare confidently and competently for competitive academic opportunities. This session will cover common interview questions, how to present your achievements persuasively, and how to articulate your academic and career goals effectively.\n\nYou’ll participate in mock interviews, receive personalized feedback, and hear from past scholarship recipients who will share their success strategies. It’s an empowering experience that sharpens your communication skills and enhances your chances of standing out among applicants.",
     },
     {
       id: 5,
@@ -97,7 +102,7 @@ const UpcomingEvents = () => {
       added: true,
       image: UpcomingSmall2,
       description:
-        "Join us for the Freshers Academic Bootcamp, an intensive but supportive program created to equip first-year students with the skills and habits needed for academic success. This event focuses on essential areas such as effective study techniques, time management, academic writing, and exam strategies.\n\nYou’ll be guided by experienced upperclassmen, tutors, and faculty who will share tips and resources that can make your academic transition smoother. Whether you’re feeling overwhelmed or simply eager to get ahead, this bootcamp is your chance to build confidence and set a strong foundation for the semester."
+        "Join us for the Freshers Academic Bootcamp, an intensive but supportive program created to equip first-year students with the skills and habits needed for academic success. This event focuses on essential areas such as effective study techniques, time management, academic writing, and exam strategies.\n\nYou’ll be guided by experienced upperclassmen, tutors, and faculty who will share tips and resources that can make your academic transition smoother. Whether you’re feeling overwhelmed or simply eager to get ahead, this bootcamp is your chance to build confidence and set a strong foundation for the semester.",
     },
     {
       id: 6,
@@ -109,23 +114,23 @@ const UpcomingEvents = () => {
       added: false,
       image: UpcomingSmall1,
       description:
-        "Unwind and recharge at the Sports and Games Weekend! This event is all about fostering camaraderie, encouraging physical fitness, and creating lasting memories through friendly competition. With a wide range of activities—from football and volleyball to board games and fun challenges—there’s something for everyone.\n\nBeyond the competition, the weekend promotes teamwork, school spirit, and stress relief. It’s a great opportunity to bond with your peers, showcase your athletic talents, or simply cheer from the sidelines and enjoy the good vibes. Come out, get active, and let the games begin!"
-    }
+        "Unwind and recharge at the Sports and Games Weekend! This event is all about fostering camaraderie, encouraging physical fitness, and creating lasting memories through friendly competition. With a wide range of activities—from football and volleyball to board games and fun challenges—there’s something for everyone.\n\nBeyond the competition, the weekend promotes teamwork, school spirit, and stress relief. It’s a great opportunity to bond with your peers, showcase your athletic talents, or simply cheer from the sidelines and enjoy the good vibes. Come out, get active, and let the games begin!",
+    },
   ]);
 
   const typeColors = {
     seminar: "bg-blue-100 text-blue-700",
     tutorial: "bg-yellow-100 text-yellow-700",
-    social: "bg-pink-100 text-pink-700"
+    social: "bg-pink-100 text-pink-700",
   };
 
   const typeColors2 = {
     seminar: "bg-blue-700",
     tutorial: "bg-yellow-700",
-    social: "bg-pink-700"
+    social: "bg-pink-700",
   };
 
-  const handleAddToCalendar = (id) => {
+  const handleRSVP = (id) => {
     setEventData((prevData) =>
       prevData.map((event) =>
         event.id === id ? { ...event, added: !event.added } : event
@@ -140,7 +145,7 @@ const UpcomingEvents = () => {
     const updateResponse = await UsersUpdate({
       current_level: details.curent_level,
       profile_picture: details?.profile_picture,
-      bio: details.bio
+      bio: details.bio,
     });
     handleClose();
     if (updateResponse.status === 200) {
@@ -154,7 +159,14 @@ const UpcomingEvents = () => {
   const Alert = ({ children, action }) => {
     return (
       <AlertDialog>
-        <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+        <AlertDialogTrigger
+          asChild
+          onClick={(e) => {
+            e.stopPropagation(); // stop card click here
+          }}
+        >
+          {children}
+        </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Proceed to continue</AlertDialogTitle>
@@ -166,7 +178,7 @@ const UpcomingEvents = () => {
             <AlertDialogAction asChild>
               <Button
                 variant="ghost"
-                onClick={() => action()}
+                onClick={(e) => action(e)}
                 className="bg-main text-[18px] rounded-lg text-white w-full"
               >
                 Proceed
@@ -178,7 +190,7 @@ const UpcomingEvents = () => {
                 size="default"
                 className="text-main text-[18px] rounded-lg border border-main bg-white w-full"
               >
-                Edit
+                Close
               </Button>
             </AlertDialogCancel>
           </AlertDialogFooter>
@@ -215,21 +227,34 @@ const UpcomingEvents = () => {
           <h1 className="text-2xl font-GeneralSans-Medium mb-4 sm:mb-0">
             {selectedEvent.name}
           </h1>
-
-          <Button
-            onClick={() => {
-              handleAddToCalendar(selectedEvent.id);
-              setSelectedEvent((ev) => {
-                return { ...ev, added: !ev.added };
-              });
-            }}
-            className=" flex items-center space-x-1 bg-main text-white"
-          >
-            {selectedEvent.added ? <CalendarMinus2 /> : <CalendarPlus2Icon />}
-            <span>
-              {selectedEvent.added ? "Remove from Calendar" : "Add to Calendar"}
-            </span>
-          </Button>
+          <div className="md:flex md:items-center md:space-x-2 space-y-2 md:space-y-0">
+            <Alert
+              action={() => {
+                handleRSVP(selectedEvent.id);
+                setSelectedEvent((ev) => {
+                  return { ...ev, added: !ev.added };
+                });
+              }}
+            >
+              <Button
+                // onClick={}
+                className=" flex items-center space-x-1 bg-main text-white"
+              >
+                {/* {selectedEvent.added ? <MinusIcon /> : <PlusIcon />} */}
+                <span>
+                  {selectedEvent.added ? "Already RSVP'd" : "RSVP Now"}
+                </span>
+              </Button>
+            </Alert>
+            <AddToCalendarDropdown
+              title="Weekly Standup"
+              start="2025-08-15T13:00:00Z"
+              end="2025-08-15T14:00:00Z"
+              location="Zoom"
+              description="Our weekly project sync-up."
+              recurrenceRule="FREQ=WEEKLY;COUNT=10"
+            />
+          </div>
         </div>
         <div className="grid grid-cols-2 gap-y-2 sm:flex sm:space-x-4 mt-4 mb-6 text-sm text-gray-700">
           <div className="flex items-center space-x-2">
@@ -259,7 +284,7 @@ const UpcomingEvents = () => {
           {selectedEvent.added && (
             <span className="text-xs bg-green-100 flex items-center space-x-1 text-green-700 px-2 py-1 rounded-full">
               <CheckCircle2 size={14} />
-              <span>Added to Calendar</span>
+              <span>{"RSVP'd"}</span>
             </span>
           )}
         </div>
@@ -345,27 +370,32 @@ const UpcomingEvents = () => {
                 {event.added && (
                   <span className="text-xs bg-green-100 flex items-center space-x-1 text-green-700 px-2 py-1 rounded-full">
                     <CheckCircle2 size={14} />
-                    <span>Added to Calendar</span>
+                    <span>{"RSVP'd"}</span>
                   </span>
                 )}
               </div>
-              <Button
-                variant="ghost"
-                onClick={(e) => {
-                  e.stopPropagation(); // Prevents opening the detail view
-                  handleAddToCalendar(event.id);
+              <Alert
+                action={() => {
+                  handleRSVP(event.id);
                 }}
-                className="mt-16 flex items-center space-x-1 text-sm text-main border border-main"
               >
-                {event.added ? (
-                  <CalendarMinus2 size={16} />
-                ) : (
-                  <CalendarPlus2Icon size={16} />
-                )}
-                <span>
-                  {event.added ? "Remove from Calendar" : "Add to Calendar"}
-                </span>
-              </Button>
+                <Button
+                  onClick={(e) => e.stopPropagation()}
+                  className=" flex items-center space-x-1 my-2 bg-main text-white"
+                >
+                  {/* {event.added ? <MinusIcon /> : <PlusIcon />} */}
+                  <span>{event.added ? "Already RSVP'd" : "RSVP Now"}</span>
+                </Button>
+              </Alert>
+
+              <AddToCalendarDropdown
+                title="Weekly Standup"
+                start="2025-08-15T13:00:00Z"
+                end="2025-08-15T14:00:00Z"
+                location="Zoom"
+                description="Our weekly project sync-up."
+                recurrenceRule="FREQ=WEEKLY;COUNT=10"
+              />
             </div>
           ))
         ) : (
