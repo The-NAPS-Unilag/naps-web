@@ -26,6 +26,7 @@ import ForumHome from "./components/Forums/ForumHome";
 import ForumPost from "./components/Forums/ForumPost";
 import ForumResponse from "./components/Forums/ForumResponse";
 import ForumTopic from "./components/Forums/ForumTopic";
+import MyMentor from "./pages/MyMentor";
 
 function App() {
   return (
@@ -62,6 +63,7 @@ function App() {
                 <Route path="/forums/topic/:topic" element={<ForumTopic />} />
             </Route>
             <Route path="mentor-program" element={<MentorProgram />} />
+            <Route path="my-mentor" element={<MyMentor />} />
             <Route path="upcoming-events" element={<UpcomingEvents />} />
             <Route path="profile-overview" element={<ProfileOverview />} />
           </Route>

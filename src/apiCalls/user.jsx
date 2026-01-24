@@ -341,7 +341,7 @@ const UsersForgotPassword = async (email) => {
 
 const UsersResetPassword = async (email, otp, new_password) => {
   const MySwal = withReactContent(Swal);
-  const url = `${apiUrl}/users/forgot-password`;
+  const url = `${apiUrl}/users/reset-password`;
   const data = {
     email,
     otp,

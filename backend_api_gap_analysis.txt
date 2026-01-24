@@ -1,0 +1,132 @@
+NAPS WEBSITE - BACKEND API GAP ANALYSIS
+========================================
+Generated: 2026-01-24
+
+This document outlines the missing endpoints, fields, and clarifications needed 
+for the NAPS Website frontend to fully function as designed.
+
+================================================================================
+SECTION 1: MISSING ENDPOINTS
+================================================================================
+
+| Module    | Missing Endpoint              | Purpose                           |
+|-----------|-------------------------------|-----------------------------------|
+| Dashboard | GET /users/{user_id}/activity | User activity feed for dashboard  |
+| Events    | GET /events/user-rsvps        | List events user has RSVP'd to    |
+
+DETAILS:
+
+1. GET /users/{user_id}/activity
+   Purpose: Get recent user activity/actions for dashboard "Profile Overview" section
+   Expected Response:
+   {
+     "activities": [
+       {
+         "id": integer,
+         "action": string (e.g., "profile_updated", "resource_uploaded", "event_rsvp"),
+         "description": string,
+         "created_at": datetime
+       }
+     ]
+   }
+
+2. GET /events/user-rsvps
+   Purpose: Track which events the current user has RSVP'd to
+   Alternative: Include `user_has_rsvpd` boolean in GET /events response
+   Expected Response:
+   {
+     "events": [
+       { "event_id": integer, "rsvp_date": datetime }
+     ]
+   }
+
+================================================================================
+SECTION 2: MISSING FIELDS IN EXISTING ENDPOINTS
+================================================================================
+
+Event Schema (GET /events, GET /events/{event_id})
+--------------------------------------------------
+| Field           | Type    | Purpose                              |
+|-----------------|---------|--------------------------------------|
+| image_url       | string  | Event image for cards and detail view|
+| user_has_rsvpd  | boolean | Show RSVP status per logged-in user  |
+
+Resource Schema (GET /resources/level/{level})
+----------------------------------------------
+| Field     | Type    | Purpose                              |
+|-----------|---------|--------------------------------------|
+| file_type | string  | File type for icon display (PDF/DOC) |
+| file_size | integer | File size for display (in bytes)     |
+
+MentorshipRelationship Schema (GET /mentorship/my-mentorships)
+--------------------------------------------------------------
+| Field             | Type    | Purpose                                |
+|-------------------|---------|----------------------------------------|
+| area_of_expertise | string  | Mentor's area of expertise for display |
+
+NOTE: The My Mentor page currently assumes the MentorshipRelationship object
+includes mentor profile details. If the API only returns mentor_id, the frontend
+must make a separate call to GET /users/{mentor_id} to get profile details.
+Current implementation handles this, but consider including mentor details
+directly in the mentorship response for efficiency.
+
+================================================================================
+SECTION 3: API CLARIFICATIONS NEEDED
+================================================================================
+
+Mentor Application (POST /mentorship/apply-mentor)
+--------------------------------------------------
+Current API accepts:
+- phone_no (string)
+- academic_background (string)
+- area_of_expertise (string)
+- preferred_mode (string)
+
+Questions:
+1. Should `areas_of_interest` (array of strings) be added? 
+   - Design shows "Areas of Interest" textarea field
+   
+2. Is `phone_no` required? 
+   - Not shown in original design but required by API
+   
+3. Clarify relationship between:
+   - Form field: "Current Level"
+   - API field: "area_of_expertise"
+   - Are these the same or different?
+
+================================================================================
+SECTION 4: WORKING ENDPOINTS (NO CHANGES NEEDED)
+================================================================================
+
+Authentication:
+- POST /users               (registration)
+- POST /users/login         (email login)
+- POST /users/login/matric  (matric login)
+- POST /users/confirm       (email verification)
+- POST /users/resend-otp    (resend OTP)
+- POST /users/forgot-password
+- POST /users/reset-password
+
+User Profile:
+- GET /users/{user_id}
+- PUT /users/update/{user_id}
+
+Resources:
+- POST /resources           (upload)
+- GET /resources/level/{level}
+
+Events:
+- GET /events
+- GET /events/{event_id}
+- POST /events/{event_id}/rsvp
+- POST /events/{event_id}/cancel_rsvp
+- GET /events/type/{event_type}
+
+Mentorship:
+- POST /mentorship/apply-mentor
+- POST /mentorship/apply
+- GET /mentorship/my-mentorships
+
+================================================================================
+END OF DOCUMENT
+================================================================================

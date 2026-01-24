@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-// import { useState } from "react";
-import { NavLink } from "react-router-dom";
-// import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import HomeActive from "../assets/images/navIcons/House-active.png";
 import Home from "../assets/images/navIcons/House.png";
 import UserActive from "../assets/images/navIcons/User-active.png";
@@ -36,19 +36,29 @@ const navItems = [
   },
   {
     name: "Forums",
-    bg: "#FDEEF1",
-    color: "#EA526F",
+    bg: "#E6F0F2",
+    color: "#026C7C",
     activeImg: ForumsActive,
     img: Forums,
     path: "/forums"
   },
   {
     name: "Mentor Program",
-    bg: "#FDEEF1",
-    color: "#EA526F",
+    bg: "#FAFFE8",
+    color: "#7C9910",
     activeImg: MentorActive,
     img: Mentor,
-    path: "/mentor-program"
+    path: "/mentor-program",
+    subItems: [
+      {
+        name: "Apply to be a Mentor",
+        path: "/mentor-program"
+      },
+      {
+        name: "My Mentor",
+        path: "/my-mentor"
+      }
+    ]
   },
   {
     name: "Upcoming Events",
@@ -69,51 +79,132 @@ const navItems = [
 ];
 
 const Sidebar = ({ collapsed, setCollapsed }) => {
+  const location = useLocation();
+  const [expandedItems, setExpandedItems] = useState({});
   const toggleSidebar = () => setCollapsed((prev) => !prev);
+
+  // Check if current path is within a nav item's sub-items
+  const isItemActive = (item) => {
+    if (location.pathname === item.path) return true;
+    if (item.subItems) {
+      return item.subItems.some((sub) => location.pathname === sub.path);
+    }
+    return false;
+  };
+
+  // Toggle expanded state for items with sub-items
+  const toggleExpand = (itemName) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [itemName]: !prev[itemName]
+    }));
+  };
+
+  // Auto-expand if sub-item is active
+  const isExpanded = (item) => {
+    if (expandedItems[item.name] !== undefined) {
+      return expandedItems[item.name];
+    }
+    // Auto-expand if any sub-item is active
+    if (item.subItems) {
+      return item.subItems.some((sub) => location.pathname === sub.path);
+    }
+    return false;
+  };
+
   return (
     <motion.div
       animate={{ width: collapsed ? "80px" : "250px" }}
-      //   initial={{ width: 80 }}
-      //   transition={{ duration: 0.3, ease: "easeInOut" }}
       className="h-full bg-gray-50 shadow-lg flex flex-col transition-all duration-300"
     >
-      {/* <div className="flex items-center justify-between p-4 border-b">
-        {!collapsed && <h2 className="text-xl font-semibold">My Dashboard</h2>}
-        <button
-          onClick={toggleSidebar}
-          className="p-2 rounded-full hover:bg-gray-200"
-        >
-          {collapsed ? <ChevronRight /> : <ChevronLeft />}
-        </button>
-      </div> */}
       <nav className="flex-1">
         <ul className="space-y-2 p-4">
           {navItems.map((item) => (
             <li key={item.name}>
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  `flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
-                    isActive ? "font-semibold" : "text-gray-700"
-                  }`
-                }
-                style={({ isActive }) => ({
-                  backgroundColor: isActive ? item.bg : "transparent",
-                  color: isActive ? item.color : "#4B5563", // Default gray-700 color
-                  borderLeft: isActive && collapsed ? "2px solid" : ""
-                })}
-              >
-                {({ isActive }) => (
-                  <>
+              {item.subItems ? (
+                // Item with sub-navigation
+                <div>
+                  <div
+                    onClick={() => !collapsed && toggleExpand(item.name)}
+                    className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 cursor-pointer ${
+                      isItemActive(item) ? "font-semibold" : "text-gray-700"
+                    }`}
+                    style={{
+                      backgroundColor: isItemActive(item) ? item.bg : "transparent",
+                      color: isItemActive(item) ? item.color : "#4B5563",
+                      borderLeft: isItemActive(item) && collapsed ? "2px solid" : ""
+                    }}
+                  >
                     <img
-                      src={isActive ? item.activeImg : item.img}
+                      src={isItemActive(item) ? item.activeImg : item.img}
                       alt={`${item.name} icon`}
                       className="w-6 h-6"
                     />
-                    {!collapsed && <span>{item.name}</span>}
-                  </>
-                )}
-              </NavLink>
+                    {!collapsed && (
+                      <>
+                        <span className="flex-1">{item.name}</span>
+                        {isExpanded(item) ? (
+                          <ChevronDown size={16} />
+                        ) : (
+                          <ChevronRight size={16} />
+                        )}
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Sub-items */}
+                  {!collapsed && isExpanded(item) && (
+                    <ul className="ml-9 mt-1 space-y-1">
+                      {item.subItems.map((subItem) => (
+                        <li key={subItem.name}>
+                          <NavLink
+                            to={subItem.path}
+                            className={({ isActive }) =>
+                              `block py-2 px-3 rounded-lg text-sm transition-all duration-300 ${
+                                isActive
+                                  ? "font-semibold"
+                                  : "text-gray-600 hover:text-gray-900"
+                              }`
+                            }
+                            style={({ isActive }) => ({
+                              backgroundColor: isActive ? item.bg : "transparent",
+                              color: isActive ? item.color : "#4B5563"
+                            })}
+                          >
+                            {subItem.name}
+                          </NavLink>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ) : (
+                // Regular item without sub-navigation
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
+                      isActive ? "font-semibold" : "text-gray-700"
+                    }`
+                  }
+                  style={({ isActive }) => ({
+                    backgroundColor: isActive ? item.bg : "transparent",
+                    color: isActive ? item.color : "#4B5563",
+                    borderLeft: isActive && collapsed ? "2px solid" : ""
+                  })}
+                >
+                  {({ isActive }) => (
+                    <>
+                      <img
+                        src={isActive ? item.activeImg : item.img}
+                        alt={`${item.name} icon`}
+                        className="w-6 h-6"
+                      />
+                      {!collapsed && <span>{item.name}</span>}
+                    </>
+                  )}
+                </NavLink>
+              )}
             </li>
           ))}
         </ul>

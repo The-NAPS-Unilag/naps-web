@@ -17,12 +17,12 @@ const UploadResource = async (id, data, setUploadProgress) => {
 
   console.log(data);
   try {
-    const postsData = await axios.put(url, data, {
+    const postsData = await axios.post(url, data, {
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
         "x-api-key": apiKey,
-        Authorization: `${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       onUploadProgress: (progressEvent) => {
         const percent = Math.round(
@@ -51,4 +51,33 @@ const UploadResource = async (id, data, setUploadProgress) => {
   }
 };
 
-export { UploadResource };
+/**
+ * Get resources by academic level
+ * @param {string} level - Academic level (e.g., "100", "200", "300", "400")
+ * @returns {Promise} - List of resources for the specified level
+ */
+const GetResourcesByLevel = async (level) => {
+  const MySwal = withReactContent(Swal);
+  const url = `${apiUrl}/resources/level/${level}`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
+        "x-api-key": apiKey,
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response;
+  } catch (err) {
+    console.log(err);
+    MySwal.fire({
+      title: err?.response?.data?.status || "Error",
+      icon: "error",
+      text: err?.response?.data?.message || err.message,
+    });
+  }
+};
+
+export { UploadResource, GetResourcesByLevel };

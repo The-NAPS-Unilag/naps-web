@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,8 +22,6 @@ import CalendarDots from "../assets/images/upcomingEventsIcons/CalendarDots.png"
 import Time from "../assets/images/upcomingEventsIcons/Time.png";
 import {
   CheckCircle2,
-  // MinusIcon,
-  // PlusIcon,
 } from "lucide-react";
 import UpcomingSmall1 from "../assets/images/upcomingSmall1.png";
 import UpcomingSmall2 from "../assets/images/upcomingSmall2.png";
@@ -31,92 +29,89 @@ import ArrowBack from "../assets/images/upcomingEventsIcons/ArrowBack.png";
 import SadFace from "../assets/images/upcomingEventsIcons/SadFace.png";
 import UpcomingBig1 from "../assets/images/UpcomingBig1.png";
 import CircularProgress from "@mui/material/CircularProgress";
-import { UsersUpdate } from "../apiCalls/user";
+import { GetEvents, RSVPEvent, CancelRSVP } from "../apiCalls/events";
 import AddToCalendarDropdown from "../components/AddToCalendar";
 
 const UpcomingEvents = () => {
-  const { user, setUser, login } = useAuth();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
-  const [details, setDetails] = useState(user);
   const [searchValue, setSearchValue] = useState("");
-  const [selectedEvent, setSelectedEvent] = useState(null); // <-- for detail view
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [eventData, setEventData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [eventData, setEventData] = useState([
-    {
-      id: 1,
-      name: "NAPS Orientation for Freshers 2024/2025 Session",
-      date: "May 10, 2025",
-      time: "10:00 AM",
-      location: "School Auditorium",
-      type: "seminar",
-      added: false,
-      image: UpcomingSmall2,
-      description:
-        "Welcome to the Department of Psychology’s Orientation event! This is your first step into the fascinating world of psychology, and we are thrilled to have you with us. Whether you’re starting your journey as a psychology major or simply exploring your interests, this event is designed to introduce you to everything the department has to offer.\n\nDuring the orientation, you’ll get an overview of the department’s academic programs, research opportunities, and resources available to support your studies. You'll meet faculty members, current students, and advisors who will guide you through your time in the department. Additionally, we’ll provide insights into the various areas of psychology you can explore, from clinical and cognitive psychology to social and behavioral studies.\n\nGet ready for an exciting start to your academic adventure, and let’s set the stage for your success in understanding the mind, behavior, and everything in between!",
-    },
-    {
-      id: 2,
-      name: "Career Development Workshop",
-      date: "May 12, 2025",
-      time: "12:00 PM",
-      location: "School Auditorium",
-      type: "tutorial",
-      added: true,
-      image: UpcomingSmall1,
-      description:
-        "Unlock your professional potential at the Career Development Workshop. This interactive session is tailored for students seeking to gain clarity and confidence in their career paths. Whether you're exploring job options, preparing for internships, or refining your personal brand, this workshop offers practical tools and strategies to move you forward.\n\nParticipants will engage with career counselors, industry professionals, and alumni who will share insights on resume writing, interview skills, networking techniques, and effective job search practices. You’ll also explore how to leverage your academic experience and personal interests to build a fulfilling and impactful career. Come ready to learn, connect, and take charge of your future.",
-    },
-    {
-      id: 3,
-      name: "Departmental Welcome Hangout",
-      date: "May 15, 2025",
-      time: "04:00 PM",
-      location: "School Auditorium",
-      type: "social",
-      added: false,
-      image: UpcomingSmall2,
-      description:
-        "Start your semester on a lively note with the Departmental Welcome Hangout—a casual, fun-filled gathering aimed at helping new and returning students connect. It’s more than just a social event; it’s an opportunity to foster friendships, meet lecturers in an informal setting, and learn about student-led initiatives and groups within the department.\n\nExpect games, music, refreshments, and engaging conversations that make you feel part of a community. Whether you're an introvert, extrovert, or somewhere in between, this relaxed environment offers a great way to break the ice and enjoy the vibrant culture of our department.",
-    },
-    {
-      id: 4,
-      name: "Scholarship Interview Training",
-      date: "May 18, 2025",
-      time: "01:00 PM",
-      location: "School Auditorium",
-      type: "tutorial",
-      added: false,
-      image: UpcomingSmall1,
-      description:
-        "If you're planning to apply for scholarships, don't miss this essential training session. The Scholarship Interview Training is designed to help you prepare confidently and competently for competitive academic opportunities. This session will cover common interview questions, how to present your achievements persuasively, and how to articulate your academic and career goals effectively.\n\nYou’ll participate in mock interviews, receive personalized feedback, and hear from past scholarship recipients who will share their success strategies. It’s an empowering experience that sharpens your communication skills and enhances your chances of standing out among applicants.",
-    },
-    {
-      id: 5,
-      name: "Freshers Academic Bootcamp",
-      date: "May 20, 2025",
-      time: "09:00 AM",
-      location: "School Auditorium",
-      type: "seminar",
-      added: true,
-      image: UpcomingSmall2,
-      description:
-        "Join us for the Freshers Academic Bootcamp, an intensive but supportive program created to equip first-year students with the skills and habits needed for academic success. This event focuses on essential areas such as effective study techniques, time management, academic writing, and exam strategies.\n\nYou’ll be guided by experienced upperclassmen, tutors, and faculty who will share tips and resources that can make your academic transition smoother. Whether you’re feeling overwhelmed or simply eager to get ahead, this bootcamp is your chance to build confidence and set a strong foundation for the semester.",
-    },
-    {
-      id: 6,
-      name: "Sports and Games Weekend",
-      date: "May 25, 2025",
-      time: "03:00 PM",
-      location: "School Auditorium",
-      type: "social",
-      added: false,
-      image: UpcomingSmall1,
-      description:
-        "Unwind and recharge at the Sports and Games Weekend! This event is all about fostering camaraderie, encouraging physical fitness, and creating lasting memories through friendly competition. With a wide range of activities—from football and volleyball to board games and fun challenges—there’s something for everyone.\n\nBeyond the competition, the weekend promotes teamwork, school spirit, and stress relief. It’s a great opportunity to bond with your peers, showcase your athletic talents, or simply cheer from the sidelines and enjoy the good vibes. Come out, get active, and let the games begin!",
-    },
-  ]);
+  // Placeholder images for events without images
+  const placeholderImages = [UpcomingSmall1, UpcomingSmall2];
+
+  // Format date for display
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "TBD";
+    try {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch {
+      return dateStr;
+    }
+  };
+
+  // Format time for display
+  const formatTime = (timeStr) => {
+    if (!timeStr) return "TBD";
+    try {
+      const [hours, minutes] = timeStr.split(":");
+      const date = new Date();
+      date.setHours(parseInt(hours), parseInt(minutes));
+      return date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+    } catch {
+      return timeStr;
+    }
+  };
+
+  // Fetch events on component mount
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setLoading(true);
+      try {
+        const response = await GetEvents();
+        if (response?.data) {
+          const events = Array.isArray(response.data) ? response.data : [];
+          const formattedEvents = events.map((event, index) => ({
+            id: event.id,
+            name: event.name,
+            description: event.description || "",
+            date: formatDate(event.date),
+            rawDate: event.date,
+            time: formatTime(event.time),
+            rawTime: event.time,
+            location: event.location || "TBD",
+            type: event.event_type || "seminar",
+            capacity: event.capacity,
+            rsvp_count: event.rsvp_count || 0,
+            is_open_for_registration: event.is_open_for_registration,
+            added: false, // TODO: Backend should provide user_has_rsvpd field
+            image: event.image_url || placeholderImages[index % 2],
+          }));
+          setEventData(formattedEvents);
+        }
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const typeColors = {
     seminar: "bg-blue-100 text-blue-700",
@@ -130,29 +125,31 @@ const UpcomingEvents = () => {
     social: "bg-pink-700",
   };
 
-  const handleRSVP = (id) => {
-    setEventData((prevData) =>
-      prevData.map((event) =>
-        event.id === id ? { ...event, added: !event.added } : event
-      )
-    );
-  };
+  const handleRSVP = async (id) => {
+    const event = eventData.find((e) => e.id === id);
+    if (!event) return;
 
-  const handleSave = async () => {
-    setUser(details);
-    let valid = false;
     handleOpen();
-    const updateResponse = await UsersUpdate({
-      current_level: details.curent_level,
-      profile_picture: details?.profile_picture,
-      bio: details.bio,
-    });
-    handleClose();
-    if (updateResponse.status === 200) {
-      valid = true;
-    }
-    if (valid) {
-      login(updateResponse.data);
+    try {
+      if (event.added) {
+        await CancelRSVP(id);
+      } else {
+        await RSVPEvent(id);
+      }
+      // Update local state after successful API call
+      setEventData((prevData) =>
+        prevData.map((e) =>
+          e.id === id ? { ...e, added: !e.added } : e
+        )
+      );
+      // Also update selected event if viewing detail
+      if (selectedEvent?.id === id) {
+        setSelectedEvent((prev) => ({ ...prev, added: !prev.added }));
+      }
+    } catch (error) {
+      console.error("RSVP operation failed:", error);
+    } finally {
+      handleClose();
     }
   };
 
@@ -162,7 +159,7 @@ const UpcomingEvents = () => {
         <AlertDialogTrigger
           asChild
           onClick={(e) => {
-            e.stopPropagation(); // stop card click here
+            e.stopPropagation();
           }}
         >
           {children}
@@ -209,6 +206,15 @@ const UpcomingEvents = () => {
     );
   });
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <CircularProgress />
+      </div>
+    );
+  }
+
   if (selectedEvent) {
     // Event detail view
     return (
@@ -231,28 +237,22 @@ const UpcomingEvents = () => {
             <Alert
               action={() => {
                 handleRSVP(selectedEvent.id);
-                setSelectedEvent((ev) => {
-                  return { ...ev, added: !ev.added };
-                });
               }}
             >
               <Button
-                // onClick={}
                 className=" flex items-center space-x-1 bg-main text-white"
               >
-                {/* {selectedEvent.added ? <MinusIcon /> : <PlusIcon />} */}
                 <span>
                   {selectedEvent.added ? "Already RSVP'd" : "RSVP Now"}
                 </span>
               </Button>
             </Alert>
             <AddToCalendarDropdown
-              title="Weekly Standup"
-              start="2025-08-15T13:00:00Z"
-              end="2025-08-15T14:00:00Z"
-              location="Zoom"
-              description="Our weekly project sync-up."
-              recurrenceRule="FREQ=WEEKLY;COUNT=10"
+              title={selectedEvent.name}
+              start={selectedEvent.rawDate ? `${selectedEvent.rawDate}T${selectedEvent.rawTime || "00:00:00"}` : new Date().toISOString()}
+              end={selectedEvent.rawDate ? `${selectedEvent.rawDate}T${selectedEvent.rawTime || "01:00:00"}` : new Date().toISOString()}
+              location={selectedEvent.location}
+              description={selectedEvent.description}
             />
           </div>
         </div>
@@ -383,18 +383,16 @@ const UpcomingEvents = () => {
                   onClick={(e) => e.stopPropagation()}
                   className=" flex items-center space-x-1 my-2 bg-main text-white"
                 >
-                  {/* {event.added ? <MinusIcon /> : <PlusIcon />} */}
                   <span>{event.added ? "Already RSVP'd" : "RSVP Now"}</span>
                 </Button>
               </Alert>
 
               <AddToCalendarDropdown
-                title="Weekly Standup"
-                start="2025-08-15T13:00:00Z"
-                end="2025-08-15T14:00:00Z"
-                location="Zoom"
-                description="Our weekly project sync-up."
-                recurrenceRule="FREQ=WEEKLY;COUNT=10"
+                title={event.name}
+                start={event.rawDate ? `${event.rawDate}T${event.rawTime || "00:00:00"}` : new Date().toISOString()}
+                end={event.rawDate ? `${event.rawDate}T${event.rawTime || "01:00:00"}` : new Date().toISOString()}
+                location={event.location}
+                description={event.description}
               />
             </div>
           ))

@@ -1,6 +1,6 @@
 // Check how they write the onchange function to validate input
 
-function MentorInput({ htmlFor, type='text', title, placeholder, className, peerClassName, onChange,  }) {    
+function MentorInput({ htmlFor, type='text', title, placeholder, className, peerClassName, onChange, value, disabled = false }) {    
     return (
         <>
             <label htmlFor={htmlFor} className={`text-sm `}>
@@ -11,9 +11,11 @@ function MentorInput({ htmlFor, type='text', title, placeholder, className, peer
                     id={htmlFor}
                     type={type}
                     placeholder={placeholder}
-                    required
+                    required={!disabled}
                     onChange={onChange}
-                    className={`${className} peer mt-2 bg-slate-50 w-full text-sm border-[0.5px] border-[#CACDD5] rounded-lg p-3 placeholder:text-sm placeholder:text-[#CACDD5] outline-none hover:border-[#2561ED] focus:border-[#2561ED] user-valid:border-[#2561ED] user-invalid:border-[#CA001A] [appearance:textfield] `}
+                    value={value}
+                    disabled={disabled}
+                    className={`${className} peer mt-2 bg-slate-50 w-full text-sm border-[0.5px] border-[#CACDD5] rounded-lg p-3 placeholder:text-sm placeholder:text-[#CACDD5] outline-none hover:border-[#2561ED] focus:border-[#2561ED] user-valid:border-[#2561ED] user-invalid:border-[#CA001A] [appearance:textfield] ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                 />
                 {/* <p className={`${peerClassName} text-[10px] text-[#CA001A]`}>This field is required</p> */} {/* Uncomment this when you have v4 of tailwind */}
             </label>
@@ -21,7 +23,7 @@ function MentorInput({ htmlFor, type='text', title, placeholder, className, peer
     );
 }
 
-export function MentorTextarea({ htmlFor, title, placeholder, className, peerClassName, onChange }) {
+export function MentorTextarea({ htmlFor, title, placeholder, className, peerClassName, onChange, value, disabled = false }) {
     return (
         <>
             <label htmlFor={htmlFor} className={`text-sm`}>
@@ -32,8 +34,10 @@ export function MentorTextarea({ htmlFor, title, placeholder, className, peerCla
                 id={htmlFor}
                 placeholder={placeholder}
                 onChange={onChange}
-                required
-                className={`${className} mt-2 h-[140px] bg-slate-50 w-full text-sm border-[0.5px] border-[#CACDD5] rounded-lg p-3 placeholder:text-sm placeholder:text-[#CACDD5] outline-none hover:border-[#2561ED] focus:border-[#2561ED] user-valid:border-[#2561ED] user-invalid:border-[#CA001A]`}
+                value={value}
+                disabled={disabled}
+                required={!disabled}
+                className={`${className} mt-2 h-[140px] bg-slate-50 w-full text-sm border-[0.5px] border-[#CACDD5] rounded-lg p-3 placeholder:text-sm placeholder:text-[#CACDD5] outline-none hover:border-[#2561ED] focus:border-[#2561ED] user-valid:border-[#2561ED] user-invalid:border-[#CA001A] ${disabled ? 'bg-gray-100 cursor-not-allowed' : ''}`}
             ></textarea>
             {/* <p className={`${peerClassName} text-[10px] text-[#CA001A]`}>This field is required</p> */} {/** Uncomment this when you have v4 of tailwind */}
         </>

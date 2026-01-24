@@ -1,15 +1,58 @@
 import { useState } from 'react';
 import MentorInput, { MentorTextarea } from '../components/mentorship/MentorInput';
+import { useAuth } from '../context/AuthContext';
+import { ApplyAsMentor } from '../apiCalls/mentorship';
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const MentorProgram = () => {
+    const { user } = useAuth();
+    
+    // Form state - prefill with user data where available
+    const [phoneNo, setPhoneNo] = useState('');
+    const [academicBg, setAcademicBg] = useState('');
+    const [areaOfExpertise, setAreaOfExpertise] = useState('');
+    const [preferredComm, setPreferredComm] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    // These can be used to write future validation code and API use too
-    const [name, setName] = useState('')
-    const [matricNo, setMatricNo] = useState('')
-    const [level, setLevel] = useState('')
-    const [academicBg, setAcademicBg] = useState('')
-    const [interests, setInterests] = useState('')
-    const [preferredComm, setPreferredComm] = useState('')
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        // Validate required fields
+        if (!phoneNo || !academicBg || !areaOfExpertise || !preferredComm) {
+            setError('Please fill in all required fields.');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const applicationData = {
+                phone_no: phoneNo,
+                academic_background: academicBg,
+                area_of_expertise: areaOfExpertise,
+                preferred_mode: preferredComm,
+            };
+
+            const response = await ApplyAsMentor(applicationData);
+            
+            if (response?.status === 201) {
+                // Reset form on success
+                setPhoneNo('');
+                setAcademicBg('');
+                setAreaOfExpertise('');
+                setPreferredComm('');
+            }
+        } catch (err) {
+            console.error('Failed to submit mentor application:', err);
+            setError('Failed to submit application. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const isFormValid = phoneNo && academicBg && areaOfExpertise && preferredComm;
     
     return (
         <>
@@ -20,32 +63,50 @@ const MentorProgram = () => {
             <div className="md:w-[448px] mt-6 mx-auto font-GeneralSans-Semibold text-[#5B5C60]">
                 <p className="mb-[14px]">All fields are required</p>
 
-                {/* If input value is okay, change border colour to #2561ED */}
-                <form action="#" className="flex flex-col gap-2">
+                {error && (
+                    <p className="text-red-500 text-sm mb-4">{error}</p>
+                )}
+
+                <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+                    {/* Display user info (read-only) */}
                     <MentorInput
                         htmlFor={"name"}
                         title={"Name"}
-                        placeholder={"Annabelle Joel"}
-                        className={'peer/name'}
-                        peerClassName={'hidden 300 peer-user-invalid/name:text-red-500 peer-user-invalid/name:block'}
-                        onChange={(e) => setName(e.target.value)}
-                   />
+                        placeholder={"Your name"}
+                        value={user ? `${user.firstname || ''} ${user.lastname || ''}` : ''}
+                        disabled={true}
+                        className={'peer/name bg-gray-100'}
+                        peerClassName={'hidden'}
+                    />
                     <MentorInput
                         htmlFor={"matric-no"}
                         title={"Matric No"}
-                        type={"number"}
-                        placeholder={"24/wer34xy"}
-                        className={'peer/matric-no'}
-                        peerClassName={'hidden 300 peer-user-invalid/matric-no:text-red-500 peer-user-invalid/matric-no:block'}
-                        onChange={(e) => setMatricNo(e.target.value)}
+                        placeholder={"Your matric number"}
+                        value={user?.matric_no || ''}
+                        disabled={true}
+                        className={'peer/matric-no bg-gray-100'}
+                        peerClassName={'hidden'}
                     />
                     <MentorInput
                         htmlFor={"level"}
                         title={"Current Level"}
-                        placeholder={"Select your Current Level"}
-                        className={'peer/level'}
-                        peerClassName={'hidden peer-user-invalid/level:text-red-500 peer-user-invalid/level:block'}
-                        onChange={(e) => setLevel(e.target.value)}
+                        placeholder={"Your current level"}
+                        value={user?.current_level ? `${user.current_level} Level` : ''}
+                        disabled={true}
+                        className={'peer/level bg-gray-100'}
+                        peerClassName={'hidden'}
+                    />
+
+                    {/* Editable fields */}
+                    <MentorInput
+                        htmlFor={"phone-no"}
+                        title={"Phone Number"}
+                        type={"tel"}
+                        placeholder={"Enter your phone number"}
+                        value={phoneNo}
+                        className={'peer/phone'}
+                        peerClassName={'hidden peer-user-invalid/phone:text-red-500 peer-user-invalid/phone:block'}
+                        onChange={(e) => setPhoneNo(e.target.value)}
                     />
 
                     <MentorTextarea
@@ -54,34 +115,49 @@ const MentorProgram = () => {
                         placeholder={
                             "Tell us a little about your Academic Background"
                         }
+                        value={academicBg}
                         className={'peer/academic'}
                         peerClassName={'hidden peer-user-invalid/academic:text-red-500 peer-user-invalid/academic:block'}
                         onChange={(e) => setAcademicBg(e.target.value)}
                     />
                     <MentorTextarea
-                        htmlFor={"interests"}
-                        title={"Areas of Interest"}
-                        placeholder={"Enter your areas of interest"}
-                        className={'peer/interest'}
-                        peerClassName={'hidden peer-user-invalid/interest:text-red-500 peer-user-invalid/interest:block'}
-                        onChange={(e) => setInterests(e.target.value)}
+                        htmlFor={"expertise"}
+                        title={"Area of Expertise"}
+                        placeholder={"Enter your areas of expertise"}
+                        value={areaOfExpertise}
+                        className={'peer/expertise'}
+                        peerClassName={'hidden peer-user-invalid/expertise:text-red-500 peer-user-invalid/expertise:block'}
+                        onChange={(e) => setAreaOfExpertise(e.target.value)}
                     />
 
                     <MentorInput
                         htmlFor={"preferred-comm"}
                         title={"Preferred Mode of Communication"}
-                        placeholder={"24/wer34xy"}
+                        placeholder={"e.g., Email, WhatsApp, Phone calls"}
+                        value={preferredComm}
                         className={'peer/preferred'}
                         peerClassName={'hidden peer-user-invalid/preferred:text-red-500 peer-user-invalid/preferred:block'}
                         onChange={(e) => setPreferredComm(e.target.value)}
                     />
 
-                    <button className="mt-[72px] bg-[#C0C0C0] text-[#FAFAFB] hover:bg-[#2561ED] text-lg rounded-lg border-none">
-                        Submit
+                    <button 
+                        type="submit"
+                        disabled={!isFormValid || loading}
+                        className={`mt-[72px] ${isFormValid && !loading ? 'bg-[#2561ED] hover:bg-[#1e4fc7]' : 'bg-[#C0C0C0]'} text-[#FAFAFB] text-lg rounded-lg border-none py-2 transition-colors`}
+                    >
+                        {loading ? 'Submitting...' : 'Submit'}
                     </button>
                 </form>
             </div>
+
+            <Backdrop
+                sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+                open={loading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </>
     );
 };
+
 export default MentorProgram;
