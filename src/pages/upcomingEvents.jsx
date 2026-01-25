@@ -27,7 +27,6 @@ import UpcomingSmall1 from "../assets/images/upcomingSmall1.png";
 import UpcomingSmall2 from "../assets/images/upcomingSmall2.png";
 import ArrowBack from "../assets/images/upcomingEventsIcons/ArrowBack.png";
 import SadFace from "../assets/images/upcomingEventsIcons/SadFace.png";
-import UpcomingBig1 from "../assets/images/UpcomingBig1.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import { GetEvents, RSVPEvent, CancelRSVP } from "../apiCalls/events";
 import AddToCalendarDropdown from "../components/AddToCalendar";
@@ -289,7 +288,7 @@ const UpcomingEvents = () => {
           )}
         </div>
         <img
-          src={UpcomingBig1}
+          src={'https://placehold.co/600x400.png'}
           alt={selectedEvent.name}
           className="w-full h-[300px] object-cover rounded-lg"
         />
