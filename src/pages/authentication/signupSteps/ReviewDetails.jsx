@@ -52,8 +52,7 @@ const ReviewDetails = ({ details, setDetails }) => {
     let valid = false;
     handleOpen();
     console.log(details);
-    // const apiKeyResponse = await GenerateAPIKey();
-    // console.log(apiKeyResponse);
+
     const signupResponse = await UsersCreate({
       firstname: details.name.split(" ")[0],
       lastname: details.name.split(" ")[1] || "",

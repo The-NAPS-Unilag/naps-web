@@ -29,8 +29,7 @@ const ForgotPassword = () => {
     let valid = false;
     const newErrors = { username: "", password: "" };
     handleOpen();
-    // const apiKeyResponse = await GenerateAPIKey();
-    // console.log(apiKeyResponse);
+
     const forgotPasswordResponse = await UsersForgotPassword(
       details.username.toLowerCase()
     );

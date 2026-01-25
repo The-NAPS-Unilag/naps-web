@@ -4,55 +4,9 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 const apiUrl = import.meta.env.VITE_APP_NAPS_URL;
-const apiKey =
-  "a89fe15dcd5331522b33cf860b62b9066e4e3358702c5fb74cc227fef06f6be1e820450036f3bf0d8986107a3bcf5a54e21ad4a8f0159c75632f2b865f9d75ca";
+
 const accessToken = localStorage.getItem("accessToken");
 
-const GenerateAPIKey = async () => {
-  const MySwal = withReactContent(Swal);
-  const url = `${apiUrl}/generate_api_key`;
-
-  try {
-    const postsData = await axios.post(
-      url,
-      {},
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json;charset=UTF-8",
-          "x-api-key": apiKey,
-        },
-      }
-    );
-    console.log(postsData);
-    // if (postsData.status !== 201 || postsData.status !== 200) {
-    //   MySwal.fire({
-    //     title: postsData.AxiosError.code,
-    //     icon: "error",
-    //     text: postsData.AxiosError.message
-    //   });
-    // }
-
-    return postsData;
-  } catch (err) {
-    console.log(err.message);
-    MySwal.fire({
-      title: err?.response?.data?.status || "Error",
-      icon: "error",
-      text: err?.response?.data?.message || err.message,
-    }).then(() => {
-      if (err?.response?.data?.message === "Expired Access") {
-        window.location.replace("/");
-      }
-      if (err?.response?.data?.message === "Token Does Not Exist") {
-        window.location.replace("/");
-      }
-      if (err?.response?.data?.message === "Unauthorized Access") {
-        window.location.replace("/");
-      }
-    });
-  }
-};
 
 const UsersCreate = async (data) => {
   const MySwal = withReactContent(Swal);
@@ -70,7 +24,7 @@ const UsersCreate = async (data) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
       },
     });
     console.log(postsData);
@@ -118,7 +72,7 @@ const UsersConfirmEmail = async (email, otp) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
       },
     });
     console.log(postsData);
@@ -165,7 +119,7 @@ const UsersResendOTP = async (email) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
       },
     });
     console.log(postsData);
@@ -212,7 +166,7 @@ const UsersLogin = async (email, password) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
       },
     });
     console.log(postsData);
@@ -260,7 +214,7 @@ const UsersLoginMatric = async (matric_no, password) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
       },
     });
     console.log(postsData);
@@ -306,7 +260,7 @@ const UsersForgotPassword = async (email) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
       },
     });
     console.log(postsData);
@@ -354,7 +308,7 @@ const UsersResetPassword = async (email, otp, new_password) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
       },
     });
     console.log(postsData);
@@ -401,7 +355,7 @@ const UsersUpdate = async (id, data) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
-        "x-api-key": apiKey,
+        
         Authorization: `Bearer ${accessToken}`,
       },
     });
@@ -453,7 +407,7 @@ const UsersGetById = async (user_id) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
         Authorization: `Bearer ${accessToken}`,
       },
     });
@@ -489,7 +443,7 @@ const UsersGets = async () => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
       },
     });
     return getsData;
@@ -524,7 +478,7 @@ const UsersDelete = async (user_id) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
+        
       },
     });
     return getsData;
@@ -560,5 +514,4 @@ export {
   UsersLoginMatric,
   UsersResendOTP,
   UsersResetPassword,
-  GenerateAPIKey,
 };

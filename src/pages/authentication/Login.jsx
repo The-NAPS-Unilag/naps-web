@@ -41,8 +41,7 @@ const Login = () => {
     let valid = false;
     const newErrors = { username: "", password: "" };
     handleOpen();
-    // const apiKeyResponse = await GenerateAPIKey();
-    // console.log(apiKeyResponse);
+
     const loginResponse = await UsersLogin(
       details.username.toLowerCase(),
       details.password

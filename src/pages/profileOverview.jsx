@@ -59,8 +59,7 @@ const ProfileOverview = () => {
     let valid = false;
     handleOpen();
     console.log(details);
-    // const apiKeyResponse = await GenerateAPIKey();
-    // console.log(apiKeyResponse);
+
     const formData = new FormData();
     formData.append("current_level", details.current_level);
     formData.append("profile_picture", image);

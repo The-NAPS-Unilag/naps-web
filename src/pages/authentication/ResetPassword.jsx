@@ -56,8 +56,7 @@ const ResetPassword = () => {
       return;
     }
     handleOpen();
-    // const apiKeyResponse = await GenerateAPIKey();
-    // console.log(apiKeyResponse);
+
     const resetResponse = await UsersResetPassword(
       userEmail,
       "789900",
