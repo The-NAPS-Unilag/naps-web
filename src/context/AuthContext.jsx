@@ -8,6 +8,7 @@ export const useAuth = () => useContext(AuthContext);
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -18,22 +19,26 @@ const AuthProvider = ({ children }) => {
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    setLoading(false);
   }, []);
+
   useEffect(() => {
+    if (loading) return;
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
     } else {
       localStorage.removeItem("user");
     }
-  }, [user]);
+  }, [user, loading]);
 
   useEffect(() => {
+    if (loading) return;
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
     } else {
       localStorage.removeItem("accessToken");
     }
-  }, [accessToken]);
+  }, [accessToken, loading]);
 
   const login = (userData) => {
     console.log(userData);
@@ -53,9 +58,9 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, accessToken, setAccessToken, login, logout }}
+      value={{ user, setUser, accessToken, setAccessToken, login, logout, loading }}
     >
-      {children}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

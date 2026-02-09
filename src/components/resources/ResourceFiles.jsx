@@ -72,6 +72,8 @@ const ResourceFiles = () => {
                             fileName={resource.title || resource.course_title || 'Untitled'}
                             author={resource.author}
                             fileUrl={resource.file_url}
+                            fileType={resource.file_type}
+                            fileSize={resource.file_size}
                             listView={listView}
                         />
                     ))

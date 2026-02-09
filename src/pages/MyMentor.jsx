@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { GetMyMentorships } from "../apiCalls/mentorship";
-import { UsersGetById } from "../apiCalls/user";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 import MentorPlaceholder from "../assets/images/upcomingSmall1.png";
@@ -27,17 +26,14 @@ const MyMentor = () => {
             ) || as_mentee[0];
             
             setMentorData(activeMentorship);
-            
-            // Fetch mentor's profile details
-            if (activeMentorship.mentor_id) {
-              try {
-                const mentorResponse = await UsersGetById(activeMentorship.mentor_id);
-                if (mentorResponse?.data) {
-                  setMentorProfile(mentorResponse.data);
-                }
-              } catch (err) {
-                console.error("Failed to fetch mentor profile:", err);
-              }
+
+            const mentorFromRelationship =
+              activeMentorship.mentor ||
+              activeMentorship.mentor_profile ||
+              activeMentorship.mentor_details;
+
+            if (mentorFromRelationship) {
+              setMentorProfile(mentorFromRelationship);
             }
           }
         }
@@ -68,7 +64,7 @@ const MyMentor = () => {
   }
 
   // No mentor assigned yet
-  if (!mentorData || !mentorProfile) {
+  if (!mentorData) {
     return (
       <div>
         <h1 className="text-4xl font-GeneralSans-Semibold text-[#A5CC15]">
@@ -103,6 +99,27 @@ const MyMentor = () => {
     );
   }
 
+  if (!mentorProfile) {
+    return (
+      <div>
+        <h1 className="text-4xl font-GeneralSans-Semibold text-[#A5CC15]">
+          My Mentor
+        </h1>
+        <div className="flex flex-col items-center justify-center mt-20 text-center">
+          <h2 className="text-xl font-GeneralSans-Medium text-gray-700 mb-2">
+            Mentor Assigned
+          </h2>
+          <p className="text-gray-500 max-w-md">
+            Your mentor has been assigned, but their profile details are not yet available.
+          </p>
+          <p className="text-gray-700 font-GeneralSans-Medium mt-4">
+            {mentorData?.area_of_expertise || "Area of expertise not provided"}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h1 className="text-4xl font-GeneralSans-Semibold text-[#A5CC15]">
@@ -130,9 +147,9 @@ const MyMentor = () => {
             </span>
           </div>
 
-          {/* Area of expertise - TODO: Backend should provide this field */}
+          {/* Area of expertise */}
           <p className="text-gray-700 font-GeneralSans-Medium">
-            {mentorData.area_of_expertise || "Cognitive Psychology, Research Methods"}
+            {mentorData?.area_of_expertise || "Area of expertise not provided"}
           </p>
 
           {/* Bio or description */}

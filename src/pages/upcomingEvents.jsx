@@ -28,7 +28,7 @@ import UpcomingSmall2 from "../assets/images/upcomingSmall2.png";
 import ArrowBack from "../assets/images/upcomingEventsIcons/ArrowBack.png";
 import SadFace from "../assets/images/upcomingEventsIcons/SadFace.png";
 import CircularProgress from "@mui/material/CircularProgress";
-import { GetEvents, RSVPEvent, CancelRSVP } from "../apiCalls/events";
+import { GetEvents, GetUserRsvps, RSVPEvent, CancelRSVP } from "../apiCalls/events";
 import AddToCalendarDropdown from "../components/AddToCalendar";
 
 const UpcomingEvents = () => {
@@ -81,9 +81,26 @@ const UpcomingEvents = () => {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const response = await GetEvents();
-        if (response?.data) {
-          const events = Array.isArray(response.data) ? response.data : [];
+        const [eventsResponse, rsvpsResponse] = await Promise.all([
+          GetEvents(),
+          GetUserRsvps(),
+        ]);
+
+        const rsvpIds = new Set();
+        if (rsvpsResponse?.data?.events) {
+          rsvpsResponse.data.events.forEach((event) => {
+            if (event?.id) {
+              rsvpIds.add(event.id);
+            } else if (event?.event_id) {
+              rsvpIds.add(event.event_id);
+            }
+          });
+        }
+
+        if (eventsResponse?.data) {
+          const events = Array.isArray(eventsResponse.data)
+            ? eventsResponse.data
+            : [];
           const formattedEvents = events.map((event, index) => ({
             id: event.id,
             name: event.name,
@@ -97,7 +114,10 @@ const UpcomingEvents = () => {
             capacity: event.capacity,
             rsvp_count: event.rsvp_count || 0,
             is_open_for_registration: event.is_open_for_registration,
-            added: false, // TODO: Backend should provide user_has_rsvpd field
+            added:
+              typeof event.user_has_rsvpd === "boolean"
+                ? event.user_has_rsvpd
+                : rsvpIds.has(event.id),
             image: event.image_url || placeholderImages[index % 2],
           }));
           setEventData(formattedEvents);
@@ -288,7 +308,7 @@ const UpcomingEvents = () => {
           )}
         </div>
         <img
-          src={'https://placehold.co/600x400.png'}
+          src={selectedEvent.image}
           alt={selectedEvent.name}
           className="w-full h-[300px] object-cover rounded-lg"
         />

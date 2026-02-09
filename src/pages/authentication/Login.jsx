@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,7 +22,7 @@ const Login = () => {
     password: "",
   });
 
-  const { login } = useAuth();
+  const { login, accessToken } = useAuth();
   const [open, setOpen] = useState(false);
   const handleClose = () => {
     setOpen(false);
@@ -31,11 +31,17 @@ const Login = () => {
     setOpen(true);
   };
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (accessToken) {
+      navigate("/dashboard");
+    }
+  }, [accessToken, navigate]);
+
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
-
-  const navigate = useNavigate();
 
   const handleLogin = async () => {
     let valid = false;
@@ -114,9 +120,8 @@ const Login = () => {
                   }
                   id="password"
                   placeholder="Password"
-                  className={`${
-                    errors.password ? "border border-red-500" : ""
-                  }`}
+                  className={`${errors.password ? "border border-red-500" : ""
+                    }`}
                 />
                 <div
                   onClick={togglePasswordVisibility}

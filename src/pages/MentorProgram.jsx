@@ -12,6 +12,7 @@ const MentorProgram = () => {
     const [phoneNo, setPhoneNo] = useState('');
     const [academicBg, setAcademicBg] = useState('');
     const [areaOfExpertise, setAreaOfExpertise] = useState('');
+    const [areasOfInterest, setAreasOfInterest] = useState('');
     const [preferredComm, setPreferredComm] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -21,18 +22,25 @@ const MentorProgram = () => {
         setError('');
 
         // Validate required fields
-        if (!phoneNo || !academicBg || !areaOfExpertise || !preferredComm) {
+        if (!academicBg || !preferredComm) {
             setError('Please fill in all required fields.');
             return;
         }
 
         setLoading(true);
         try {
+            const interests = areasOfInterest
+                .split(/[\n,]/)
+                .map((value) => value.trim())
+                .filter(Boolean);
+
             const applicationData = {
-                phone_no: phoneNo,
                 academic_background: academicBg,
-                area_of_expertise: areaOfExpertise,
                 preferred_mode: preferredComm,
+                phone_no: phoneNo || undefined,
+                area_of_expertise: areaOfExpertise || undefined,
+                areas_of_interest: interests.length > 0 ? interests : undefined,
+                current_level: user?.current_level || undefined,
             };
 
             const response = await ApplyAsMentor(applicationData);
@@ -42,6 +50,7 @@ const MentorProgram = () => {
                 setPhoneNo('');
                 setAcademicBg('');
                 setAreaOfExpertise('');
+                setAreasOfInterest('');
                 setPreferredComm('');
             }
         } catch (err) {
@@ -52,7 +61,7 @@ const MentorProgram = () => {
         }
     };
 
-    const isFormValid = phoneNo && academicBg && areaOfExpertise && preferredComm;
+    const isFormValid = academicBg && preferredComm;
     
     return (
         <>
@@ -61,7 +70,7 @@ const MentorProgram = () => {
             </h1>
 
             <div className="md:w-[448px] mt-6 mx-auto font-GeneralSans-Semibold text-[#5B5C60]">
-                <p className="mb-[14px]">All fields are required</p>
+                <p className="mb-[14px]">Academic Background and Preferred Mode are required</p>
 
                 {error && (
                     <p className="text-red-500 text-sm mb-4">{error}</p>
@@ -128,6 +137,15 @@ const MentorProgram = () => {
                         className={'peer/expertise'}
                         peerClassName={'hidden peer-user-invalid/expertise:text-red-500 peer-user-invalid/expertise:block'}
                         onChange={(e) => setAreaOfExpertise(e.target.value)}
+                    />
+                    <MentorTextarea
+                        htmlFor={"areas-of-interest"}
+                        title={"Areas of Interest"}
+                        placeholder={"List areas of interest separated by commas or new lines"}
+                        value={areasOfInterest}
+                        className={'peer/interest'}
+                        peerClassName={'hidden peer-user-invalid/interest:text-red-500 peer-user-invalid/interest:block'}
+                        onChange={(e) => setAreasOfInterest(e.target.value)}
                     />
 
                     <MentorInput

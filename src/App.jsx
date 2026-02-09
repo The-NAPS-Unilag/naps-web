@@ -43,7 +43,6 @@ function App() {
 
           {/* Protected Dashboard Routes with DashboardLayout */}
           <Route
-            path="/"
             element={
               <ProtectedRoute>
                 <DashboardLayout />
@@ -57,10 +56,10 @@ function App() {
               <Route path="/resources/addResource" element={<AddResource />} />
             </Route>
             <Route path="forums" element={<Forums />}>
-                <Route index element={<ForumHome />} />
-                <Route path="/forums/forumPost" element={<ForumPost />} />
-                <Route path="/forums/response" element={<ForumResponse />} />
-                <Route path="/forums/topic/:topic" element={<ForumTopic />} />
+              <Route index element={<ForumHome />} />
+              <Route path="/forums/forumPost" element={<ForumPost />} />
+              <Route path="/forums/response" element={<ForumResponse />} />
+              <Route path="/forums/topic/:topic" element={<ForumTopic />} />
             </Route>
             <Route path="mentor-program" element={<MentorProgram />} />
             <Route path="my-mentor" element={<MyMentor />} />

@@ -3,9 +3,12 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-const apiUrl = import.meta.env.VITE_APP_NAPS_URL;
-
-const accessToken = localStorage.getItem("accessToken");
+const apiUrl = import.meta.env.VITE_APP_NAPS_URL || "/api";
+const getAccessToken = () => localStorage.getItem("accessToken");
+const getAuthHeader = () => {
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 const UploadResource = async (id, data, setUploadProgress) => {
   const MySwal = withReactContent(Swal);
@@ -21,7 +24,7 @@ const UploadResource = async (id, data, setUploadProgress) => {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
         
-        Authorization: `Bearer ${accessToken}`,
+        ...getAuthHeader(),
       },
       onUploadProgress: (progressEvent) => {
         const percent = Math.round(
@@ -65,7 +68,7 @@ const GetResourcesByLevel = async (level) => {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
         
-        Authorization: `Bearer ${accessToken}`,
+        ...getAuthHeader(),
       },
     });
     return response;

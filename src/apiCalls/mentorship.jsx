@@ -3,10 +3,14 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-const apiUrl = import.meta.env.VITE_APP_NAPS_URL;
+const apiUrl = import.meta.env.VITE_APP_NAPS_URL || "/api";
 
 
 const getAccessToken = () => localStorage.getItem("accessToken");
+const getAuthHeader = () => {
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 /**
  * Apply to become a mentor
@@ -26,8 +30,7 @@ const ApplyAsMentor = async (data) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     if (response.status === 201) {
@@ -66,8 +69,7 @@ const ApplyAsMentee = async (data) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     if (response.status === 201) {
@@ -102,8 +104,7 @@ const GetMyMentorships = async () => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     return response;
@@ -139,8 +140,7 @@ const ScheduleSession = async (data) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     if (response.status === 201) {
@@ -176,8 +176,7 @@ const GetMentorshipSessions = async (mentorshipId) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     return response;
