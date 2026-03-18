@@ -48,8 +48,7 @@ const VerifyAccount = () => {
     let valid = false;
     const newErrors = { otp: "" };
     handleOpen();
-    // const apiKeyResponse = await GenerateAPIKey();
-    // console.log(apiKeyResponse);
+
     const verifyResponse = await UsersConfirmEmail(
       userEmail.toLowerCase(),
       details.otp
@@ -84,8 +83,7 @@ const VerifyAccount = () => {
   const resendOTP = async () => {
     handleOpen();
     // let valid = false;
-    // const apiKeyResponse = await GenerateAPIKey();
-    // console.log(apiKeyResponse);
+
     const resendResponse = await UsersResendOTP(userEmail.toLowerCase());
     handleClose();
     console.log(resendResponse);

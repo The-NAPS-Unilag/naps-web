@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import Sidebar from "../components/sidebar";
 import DashboardNav from "../components/DashboardNav";
-import { useAuth } from "../context/AuthContext";
 
 export default function DashboardLayout() {
   const [collapsed, setCollapsed] = useState(false);

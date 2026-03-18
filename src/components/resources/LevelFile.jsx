@@ -1,7 +1,19 @@
 import fileThumbnail from '../../assets/images/ResourceIcons/FileThumbnail.svg'
 import dots from '../../assets/images/ResourceIcons/DotsThreeVertical.svg'
 
-const LevelFile = ({ fileName, author, fileUrl, listView }) => {
+const formatFileSize = (bytes) => {
+    if (!bytes && bytes !== 0) return '';
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    let size = bytes;
+    let unitIndex = 0;
+    while (size >= 1024 && unitIndex < sizes.length - 1) {
+        size /= 1024;
+        unitIndex += 1;
+    }
+    return `${size.toFixed(size < 10 && unitIndex > 0 ? 1 : 0)} ${sizes[unitIndex]}`;
+};
+
+const LevelFile = ({ fileName, author, fileUrl, listView, fileType, fileSize }) => {
     
     const handleDownload = (e) => {
         e.stopPropagation();
@@ -9,6 +21,16 @@ const LevelFile = ({ fileName, author, fileUrl, listView }) => {
             window.open(fileUrl, '_blank');
         }
     };
+
+    const metaParts = [];
+    if (fileType) {
+        metaParts.push(fileType.toUpperCase());
+    }
+    if (fileSize || fileSize === 0) {
+        const sizeLabel = formatFileSize(fileSize);
+        if (sizeLabel) metaParts.push(sizeLabel);
+    }
+    const metaLabel = metaParts.join(' • ');
 
     return (
         <>
@@ -27,6 +49,11 @@ const LevelFile = ({ fileName, author, fileUrl, listView }) => {
                             <p className="text-base">{fileName}</p>
                             {author && listView && (
                                 <p className="text-xs text-gray-500">by {author}</p>
+                            )}
+                            {metaLabel && (
+                                <p className={`text-xs text-gray-500 ${author && listView ? 'mt-0.5' : 'mt-1'}`}>
+                                    {metaLabel}
+                                </p>
                             )}
                         </div>
                         <img src={dots} alt="dots" className={`${listView ? 'mr-16' : ''} cursor-pointer`} />

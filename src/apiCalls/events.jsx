@@ -3,11 +3,14 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-const apiUrl = import.meta.env.VITE_APP_NAPS_URL;
-const apiKey =
-  "a89fe15dcd5331522b33cf860b62b9066e4e3358702c5fb74cc227fef06f6be1e820450036f3bf0d8986107a3bcf5a54e21ad4a8f0159c75632f2b865f9d75ca";
+const apiUrl = import.meta.env.VITE_APP_NAPS_URL || "/api";
+
 
 const getAccessToken = () => localStorage.getItem("accessToken");
+const getAuthHeader = () => {
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 /**
  * Get all approved events
@@ -22,8 +25,7 @@ const GetEvents = async () => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     return response;
@@ -48,6 +50,28 @@ const GetEvents = async () => {
 };
 
 /**
+ * Get events the current user has RSVP'd to
+ * @returns {Promise} - List of RSVP'd events
+ */
+const GetUserRsvps = async () => {
+  const url = `${apiUrl}/events/user-rsvps`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    });
+    return response;
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+};
+
+/**
  * Get event by ID
  * @param {number} eventId - ID of the event to retrieve
  * @returns {Promise} - Event details
@@ -61,8 +85,7 @@ const GetEventById = async (eventId) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     return response;
@@ -90,8 +113,7 @@ const GetEventsByType = async (eventType) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     return response;
@@ -122,8 +144,7 @@ const RSVPEvent = async (eventId) => {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json;charset=UTF-8",
-          "x-api-key": apiKey,
-          Authorization: `Bearer ${getAccessToken()}`,
+          ...getAuthHeader(),
         },
       }
     );
@@ -163,8 +184,7 @@ const CancelRSVP = async (eventId) => {
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json;charset=UTF-8",
-          "x-api-key": apiKey,
-          Authorization: `Bearer ${getAccessToken()}`,
+          ...getAuthHeader(),
         },
       }
     );
@@ -187,4 +207,11 @@ const CancelRSVP = async (eventId) => {
   }
 };
 
-export { GetEvents, GetEventById, GetEventsByType, RSVPEvent, CancelRSVP };
+export {
+  GetEvents,
+  GetEventById,
+  GetEventsByType,
+  GetUserRsvps,
+  RSVPEvent,
+  CancelRSVP,
+};

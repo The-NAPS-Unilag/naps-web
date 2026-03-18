@@ -27,7 +27,7 @@ import { Edit2Icon, Save } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
-import { UsersGetById, UsersUpdate } from "../apiCalls/user";
+import { UsersGetMe, UsersUpdate } from "../apiCalls/user";
 import { UploadCloud, User } from "lucide-react";
 
 const ProfileOverview = () => {
@@ -59,8 +59,7 @@ const ProfileOverview = () => {
     let valid = false;
     handleOpen();
     console.log(details);
-    // const apiKeyResponse = await GenerateAPIKey();
-    // console.log(apiKeyResponse);
+
     const formData = new FormData();
     formData.append("current_level", details.current_level);
     formData.append("profile_picture", image);
@@ -73,7 +72,7 @@ const ProfileOverview = () => {
     }
 
     if (valid) {
-      const getUserData = await UsersGetById(user?.id);
+      const getUserData = await UsersGetMe();
       if (getUserData.status === 200) {
         login({ user: getUserData.data });
       }

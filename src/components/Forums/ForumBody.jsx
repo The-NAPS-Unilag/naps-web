@@ -1,10 +1,26 @@
-import ForumTile from './ForumTile'
+/* eslint-disable react/prop-types */
+import { useState, useEffect } from 'react'
 import BackButton from '../resources/BackButton'
-import PaperclipSvg from '../../assets/images/forumIcons/Paperclip.svg'
-import ForumReply from './ForumReply'
 import ForumMenu, { ForumMenuKids } from './ForumMenu'
+import { GetForums } from '../../apiCalls/forums'
 
 const ForumBody = ({ children }) => {
+    const [forums, setForums] = useState([])
+
+    useEffect(() => {
+        const fetchForums = async () => {
+            try {
+                const response = await GetForums()
+                if (response?.data) {
+                    setForums(Array.isArray(response.data) ? response.data : [])
+                }
+            } catch (error) {
+                console.error('Failed to fetch forums:', error)
+            }
+        }
+        fetchForums()
+    }, [])
+
     return (
         <div className='flex max-sm:flex-col gap-4 justify-between mt-10 '>
             <div className="min-w-20">
@@ -19,34 +35,25 @@ const ForumBody = ({ children }) => {
                 <ForumMenu
                     title={"Recommended Categories"}
                 >
-                    <ForumMenuKids 
-                        title={"General"}
-                        number={"1156"}
-                    />
-                    <ForumMenuKids 
-                        title={"Academic Discussions"}
-                        number={"988"}
-                    />
-                    <ForumMenuKids 
-                        title={"Research & Case Studies"}
-                        number={"766"}
-                    />
-                    <ForumMenuKids 
-                        title={"Career & Mentorship"}
-                        number={"432"}
-                    />
-                    <ForumMenuKids 
-                        title={"Study Resources & Tips"}
-                        number={"890"}
-                    />
-                    <ForumMenuKids 
-                        title={"Current Trends in Psychology"}
-                        number={"57"}
-                    />
-                    <ForumMenuKids 
-                        title={"Wellbeing & Self Care"}
-                        number={"874"}
-                    />
+                    {forums.length > 0 ? (
+                        forums.slice(0, 7).map((forum) => (
+                            <ForumMenuKids
+                                key={forum.id}
+                                title={forum.name}
+                                number={forum.member_count || forum.memberCount || '0'}
+                            />
+                        ))
+                    ) : (
+                        <>
+                            <ForumMenuKids title={"General"} number={"1156"} />
+                            <ForumMenuKids title={"Academic Discussions"} number={"988"} />
+                            <ForumMenuKids title={"Research & Case Studies"} number={"766"} />
+                            <ForumMenuKids title={"Career & Mentorship"} number={"432"} />
+                            <ForumMenuKids title={"Study Resources & Tips"} number={"890"} />
+                            <ForumMenuKids title={"Current Trends in Psychology"} number={"57"} />
+                            <ForumMenuKids title={"Wellbeing & Self Care"} number={"874"} />
+                        </>
+                    )}
                 </ForumMenu>
             </div>
         </div>

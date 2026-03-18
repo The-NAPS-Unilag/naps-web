@@ -3,11 +3,14 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-const apiUrl = import.meta.env.VITE_APP_NAPS_URL;
-const apiKey =
-  "a89fe15dcd5331522b33cf860b62b9066e4e3358702c5fb74cc227fef06f6be1e820450036f3bf0d8986107a3bcf5a54e21ad4a8f0159c75632f2b865f9d75ca";
+const apiUrl = import.meta.env.VITE_APP_NAPS_URL || "/api";
+
 
 const getAccessToken = () => localStorage.getItem("accessToken");
+const getAuthHeader = () => {
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 /**
  * Apply to become a mentor
@@ -27,8 +30,7 @@ const ApplyAsMentor = async (data) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     if (response.status === 201) {
@@ -67,8 +69,7 @@ const ApplyAsMentee = async (data) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     if (response.status === 201) {
@@ -103,8 +104,7 @@ const GetMyMentorships = async () => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     return response;
@@ -140,8 +140,7 @@ const ScheduleSession = async (data) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     if (response.status === 201) {
@@ -177,8 +176,7 @@ const GetMentorshipSessions = async (mentorshipId) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${getAccessToken()}`,
+        ...getAuthHeader(),
       },
     });
     return response;

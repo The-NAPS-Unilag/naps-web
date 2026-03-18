@@ -3,8 +3,18 @@ import { Button } from "../components/ui/button";
 // import { Card, CardContent, CardTitle } from "../components/ui/card";
 import { useNavigate } from "react-router-dom";
 
+import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
+
 function Welcome() {
   const navigate = useNavigate();
+  const { accessToken } = useAuth();
+
+  useEffect(() => {
+    if (accessToken) {
+      navigate("/dashboard");
+    }
+  }, [accessToken, navigate]);
   return (
     <>
       <div className="w-full h-screen bg-white flex flex-col items-center justify-center font-GeneralSans">

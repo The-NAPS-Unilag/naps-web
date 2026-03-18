@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import BackButton from "./BackButton";
 import LevelFile from "./LevelFile";
@@ -7,7 +7,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const ResourceFiles = () => {
     let { level } = useParams(); 
-    const navigate = useNavigate();
     const listView = useOutletContext();
     const [resources, setResources] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -72,6 +71,8 @@ const ResourceFiles = () => {
                             fileName={resource.title || resource.course_title || 'Untitled'}
                             author={resource.author}
                             fileUrl={resource.file_url}
+                            fileType={resource.file_type}
+                            fileSize={resource.file_size}
                             listView={listView}
                         />
                     ))

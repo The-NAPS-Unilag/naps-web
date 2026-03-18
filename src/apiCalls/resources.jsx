@@ -3,10 +3,12 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
-const apiUrl = import.meta.env.VITE_APP_NAPS_URL;
-const apiKey =
-  "a89fe15dcd5331522b33cf860b62b9066e4e3358702c5fb74cc227fef06f6be1e820450036f3bf0d8986107a3bcf5a54e21ad4a8f0159c75632f2b865f9d75ca";
-const accessToken = localStorage.getItem("accessToken");
+const apiUrl = import.meta.env.VITE_APP_NAPS_URL || "/api";
+const getAccessToken = () => localStorage.getItem("accessToken");
+const getAuthHeader = () => {
+  const token = getAccessToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 const UploadResource = async (id, data, setUploadProgress) => {
   const MySwal = withReactContent(Swal);
@@ -21,8 +23,8 @@ const UploadResource = async (id, data, setUploadProgress) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${accessToken}`,
+        
+        ...getAuthHeader(),
       },
       onUploadProgress: (progressEvent) => {
         const percent = Math.round(
@@ -65,8 +67,8 @@ const GetResourcesByLevel = async (level) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json;charset=UTF-8",
-        "x-api-key": apiKey,
-        Authorization: `Bearer ${accessToken}`,
+        
+        ...getAuthHeader(),
       },
     });
     return response;
