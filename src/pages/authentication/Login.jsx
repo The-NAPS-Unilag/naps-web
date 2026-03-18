@@ -94,7 +94,7 @@ const Login = () => {
                 Matric Number / Email Address
               </Label>
               <Input
-                type="email"
+                type="text"
                 id="email"
                 value={details.username}
                 onChange={(e) =>

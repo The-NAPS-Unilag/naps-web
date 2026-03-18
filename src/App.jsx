@@ -52,7 +52,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="resources" element={<Resources />}>
               <Route index element={<ResourceLevels />} />
-              <Route path="/resources:level" element={<ResourceFiles />} />
+              <Route path="resources/:level" element={<ResourceFiles />} />
               <Route path="/resources/addResource" element={<AddResource />} />
             </Route>
             <Route path="forums" element={<Forums />}>
