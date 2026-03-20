@@ -101,7 +101,7 @@ describe('AuthContext', () => {
     expect(localStorage.getItem('user')).toBeNull();
   });
 
-  it('does not render children while loading', () => {
+  it('does not render children while loading', async () => {
     // Spy on localStorage to delay the resolution simulation
     const originalGetItem = localStorage.getItem.bind(localStorage);
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation((key) => {
@@ -117,7 +117,7 @@ describe('AuthContext', () => {
     // Children are hidden until loading is false (AuthProvider renders {!loading && children})
     // We confirm that after resolution the child becomes visible
     vi.restoreAllMocks();
-    waitFor(() =>
+    await waitFor(() =>
       expect(container.querySelector('[data-testid="child"]')).toBeInTheDocument()
     );
   });

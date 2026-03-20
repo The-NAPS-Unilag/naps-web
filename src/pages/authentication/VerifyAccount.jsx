@@ -71,7 +71,7 @@ const VerifyAccount = () => {
 
     if (valid) {
       if (from === "fp") {
-        navigate(`/resetPassword?email=${userEmail}`);
+        navigate(`/resetPassword?email=${userEmail}&otp=${details.otp}`);
       } else if (from === "su") {
         navigate("/dashboard");
       } else {
@@ -87,13 +87,13 @@ const VerifyAccount = () => {
     const resendResponse = await UsersResendOTP(userEmail.toLowerCase());
     handleClose();
     console.log(resendResponse);
-    if (resendResponse.status === 200) {
+    if (resendResponse?.status === 200) {
       setTrialsLeft((prev) => Math.max(prev - 1, 0));
 
       MySwal.fire({
         title: "SUCCESS",
         icon: "success",
-        text: resendResponse.data.message
+        text: resendResponse.data?.message
       });
     }
   };

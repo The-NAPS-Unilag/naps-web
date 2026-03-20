@@ -108,8 +108,8 @@ const UsersConfirmEmail = async (email, otp) => {
       if (err?.response?.data?.message === "Unauthorized Access") {
         window.location.replace("/");
       }
-      return err.message;
     });
+    return err.message;
   }
 };
 
@@ -156,6 +156,7 @@ const UsersResendOTP = async (email) => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 
@@ -251,6 +252,7 @@ const UsersLoginMatric = async (matric_no, password) => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 
@@ -297,6 +299,7 @@ const UsersForgotPassword = async (email) => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 
@@ -345,6 +348,7 @@ const UsersResetPassword = async (email, otp, new_password) => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 
@@ -400,6 +404,7 @@ const UsersUpdate = async (id, data) => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 
@@ -433,6 +438,7 @@ const UsersGetMe = async () => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 
@@ -486,6 +492,7 @@ const UsersGets = async () => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 
@@ -521,6 +528,7 @@ const UsersDelete = async (user_id) => {
         window.location.replace("/");
       }
     });
+    return err.message;
   }
 };
 

@@ -58,7 +58,7 @@ function App() {
             <Route path="forums" element={<Forums />}>
               <Route index element={<ForumHome />} />
               <Route path="/forums/forumPost" element={<ForumPost />} />
-              <Route path="/forums/response" element={<ForumResponse />} />
+              <Route path="/forums/response/:threadId" element={<ForumResponse />} />
               <Route path="/forums/topic/:topic" element={<ForumTopic />} />
             </Route>
             <Route path="mentor-program" element={<MentorProgram />} />

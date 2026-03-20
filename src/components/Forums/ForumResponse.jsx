@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import ForumTile from './ForumTile'
 import PaperclipSvg from '../../assets/images/forumIcons/Paperclip.svg'
 import ForumReply from './ForumReply'
@@ -17,7 +18,7 @@ const ForumResponse = () => {
     const [attachment, setAttachment] = useState(null)
     const [sending, setSending] = useState(false)
 
-    const threadId = 1
+    const { threadId } = useParams()
 
     useEffect(() => {
         const fetchThread = async () => {

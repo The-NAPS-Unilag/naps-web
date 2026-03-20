@@ -188,14 +188,14 @@ describe('User API calls', () => {
       expect(config.headers.Authorization).toBeUndefined();
     });
 
-    it('returns null when the request fails', async () => {
+    it('returns the error message when the request fails', async () => {
       const error = new Error('Network Error');
       error.response = { data: { message: 'Unauthorized Access' } };
       axios.get.mockRejectedValueOnce(error);
 
       const result = await UsersGetMe();
 
-      expect(result).toBeUndefined();
+      expect(result).toBe('Network Error');
     });
   });
 

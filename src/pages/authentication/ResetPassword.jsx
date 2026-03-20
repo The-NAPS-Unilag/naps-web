@@ -36,6 +36,7 @@ const ResetPassword = () => {
     setShowPassword((prev) => !prev);
   };
   const [userEmail, setUserEmail] = useState("");
+  const [userOtp, setUserOtp] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -44,8 +45,12 @@ const ResetPassword = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const emailParam = params.get("email");
+    const otpParam = params.get("otp");
     if (emailParam) {
       setUserEmail(emailParam);
+    }
+    if (otpParam) {
+      setUserOtp(otpParam);
     }
   }, [location.search]);
 
@@ -59,12 +64,12 @@ const ResetPassword = () => {
 
     const resetResponse = await UsersResetPassword(
       userEmail,
-      "789900",
+      userOtp,
       details.password
     );
     handleClose();
     console.log(resetResponse);
-    if (resetResponse.status === 200) {
+    if (resetResponse?.status === 200) {
       valid = true;
       MySwal.fire({
         title: "SUCCESS",
