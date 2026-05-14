@@ -10,15 +10,6 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src")
     }
   },
-  server: {
-    proxy: {
-      "/api": {
-        target: "https://naps.odamarketplace.com",
-        changeOrigin: true,
-        secure: true,
-      }
-    }
-  },
   test: {
     globals: true,
     environment: "jsdom",
