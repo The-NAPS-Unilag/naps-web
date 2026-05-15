@@ -61,14 +61,23 @@ describe('User API calls', () => {
       expect(result.data).toEqual(responseData);
     });
 
-    it('returns the error message string on failure', async () => {
+    it('returns the error response on failure so callers can read status/data', async () => {
       const error = new Error('Request failed with status code 401');
-      error.response = { data: { status: 'Unauthorized', message: 'Invalid credentials' } };
+      error.response = { status: 401, data: { status: 'Unauthorized', message: 'Invalid credentials' } };
       axios.post.mockRejectedValueOnce(error);
 
       const result = await UsersLogin('bad@example.com', 'wrong');
 
-      expect(result).toBe('Request failed with status code 401');
+      expect(result).toEqual(error.response);
+    });
+
+    it('returns null on a true network error with no response', async () => {
+      const error = new Error('Network Error');
+      axios.post.mockRejectedValueOnce(error);
+
+      const result = await UsersLogin('bad@example.com', 'wrong');
+
+      expect(result).toBeNull();
     });
   });
 

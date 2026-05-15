@@ -238,6 +238,35 @@ const CreateThread = async (forumId, data) => {
 };
 
 /**
+ * Get all threads in a forum
+ * @param {number} forumId - Forum ID
+ * @returns {Promise} - List of threads
+ */
+const GetForumThreads = async (forumId) => {
+  const MySwal = withReactContent(Swal);
+  const url = `${apiUrl}/forums/${forumId}/threads`;
+
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json;charset=UTF-8",
+        ...getAuthHeader(),
+      },
+    });
+    return response;
+  } catch (err) {
+    console.log(err);
+    MySwal.fire({
+      title: err?.response?.data?.status || "Error",
+      icon: "error",
+      text: err?.response?.data?.message || err.message,
+    });
+    return null;
+  }
+};
+
+/**
  * Get thread details with messages
  * @param {number} threadId - Thread ID
  * @returns {Promise} - Thread details and messages
@@ -376,6 +405,7 @@ export {
   CreateForum,
   JoinForum,
   CreateThread,
+  GetForumThreads,
   GetThread,
   GetMessages,
   SendMessage,

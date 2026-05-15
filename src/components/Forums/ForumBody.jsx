@@ -44,15 +44,7 @@ const ForumBody = ({ children }) => {
                             />
                         ))
                     ) : (
-                        <>
-                            <ForumMenuKids title={"General"} number={"1156"} />
-                            <ForumMenuKids title={"Academic Discussions"} number={"988"} />
-                            <ForumMenuKids title={"Research & Case Studies"} number={"766"} />
-                            <ForumMenuKids title={"Career & Mentorship"} number={"432"} />
-                            <ForumMenuKids title={"Study Resources & Tips"} number={"890"} />
-                            <ForumMenuKids title={"Current Trends in Psychology"} number={"57"} />
-                            <ForumMenuKids title={"Wellbeing & Self Care"} number={"874"} />
-                        </>
+                        <p className="text-xs text-gray-500 py-2">No forums yet.</p>
                     )}
                 </ForumMenu>
             </div>

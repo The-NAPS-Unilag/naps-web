@@ -74,15 +74,7 @@ function ForumHome() {
                             />
                         ))
                     ) : (
-                        <>
-                            <ForumMenuKids title={"General"} number={"1156"} />
-                            <ForumMenuKids title={"Academic Discussions"} number={"988"} />
-                            <ForumMenuKids title={"Research & Case Studies"} number={"766"} />
-                            <ForumMenuKids title={"Career & Mentorship"} number={"432"} />
-                            <ForumMenuKids title={"Study Resources & Tips"} number={"890"} />
-                            <ForumMenuKids title={"Current Trends in Psychology"} number={"57"} />
-                            <ForumMenuKids title={"Wellbeing & Self Care"} number={"874"} />
-                        </>
+                        <p className="text-xs text-gray-500 py-2">No forums yet.</p>
                     )}
                 </ForumMenu>
 
@@ -96,13 +88,7 @@ function ForumHome() {
                             />
                         ))
                     ) : (
-                        <>
-                            <ForumMenuPpl name={"Adebayo Grace"} rank={"#1"} />
-                            <ForumMenuPpl name={"Muhammad Mukhtar"} rank={"#2"} />
-                            <ForumMenuPpl name={"Ikram Abubakar"} rank={"#3"} />
-                            <ForumMenuPpl name={"Ibrahim Ummu"} rank={"#4"} />
-                            <ForumMenuPpl name={"Ebuka Chinaza"} rank={"#5"} />
-                        </>
+                        <p className="text-xs text-gray-500 py-2">No contributors yet.</p>
                     )}
                 </ForumMenu>
             </div>
@@ -136,9 +122,9 @@ function ForumHome() {
                         forums.slice(0, 5).map((forum) => (
                             <ForumTile
                                 key={forum.id}
-                                studentName={forum.created_by_name || forum.creator?.firstname + ' ' + forum.creator?.lastname || 'Anonymous'}
+                                studentName={[forum.creator?.firstname, forum.creator?.lastname].filter(Boolean).join(" ") || forum.created_by_name || "Anonymous"}
                                 channelName={forum.name}
-                                time={formatTimeAgo(forum.created_at)}
+                                time={formatTimeAgo(forum.created_on || forum.created_at)}
                                 topic={forum.description?.substring(0, 60) || forum.name}
                                 topicDetail={forum.description || `Join the ${forum.name} discussion`}
                                 heartsNo={forum.likes_count || forum.likes || 0}
@@ -147,16 +133,10 @@ function ForumHome() {
                             />
                         ))
                     ) : (
-                        <ForumTile
-                            studentName={'Adebayo Grace'}
-                            channelName={'Academic Discussion'}
-                            time={"Just now"}
-                            topic={'Help with Respiratory Physiology concept'}
-                            topicDetail={"I'm struggling to understand how the partial pressure of gases affects oxygen diffusion in the lungs. Can someone explain it in simple terms or share any useful materials?"}
-                            heartsNo={22}
-                            repliesNo={30}
-                            views={100}
-                        />
+                        <div className="text-center py-12 text-gray-500">
+                            <p>No discussions yet.</p>
+                            <p className="text-sm mt-2">Check back soon, or contact an admin to set up a forum.</p>
+                        </div>
                     )}
                 </div>
             </div>

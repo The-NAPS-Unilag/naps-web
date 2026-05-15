@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import BackButton from "./BackButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -29,6 +32,8 @@ const AddResource = () => {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const MySwal = withReactContent(Swal);
 
   const MAX_FILE_SIZE_MB = 5;
   const ALLOWED_FILE_TYPES = [
@@ -96,9 +101,8 @@ const AddResource = () => {
         setUploadProgress
       );
 
-      console.log(updateResponse);
-      if (updateResponse.status === 200) {
-        alert("Resource uploaded successfully!");
+      const status = updateResponse?.status;
+      if (status === 200 || status === 201) {
         setForm({
           title: "",
           course_title: "",
@@ -108,8 +112,17 @@ const AddResource = () => {
           file: null,
           url: "",
         });
-      } else {
-        setError("Failed to upload resource. Try again.");
+        await MySwal.fire({
+          title: "Submitted for review",
+          icon: "success",
+          text: "Your resource was uploaded and is pending admin approval. You’ll be notified by email once it’s approved.",
+          confirmButtonText: "OK",
+        });
+        navigate("/resources");
+      } else if (updateResponse) {
+        setError(
+          updateResponse?.data?.message || "Failed to upload resource. Try again."
+        );
       }
     } catch (err) {
       console.error(err);

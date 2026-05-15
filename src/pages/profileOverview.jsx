@@ -54,6 +54,10 @@ const ProfileOverview = () => {
     setDetails(user || {});
   }, [user]);
 
+  useEffect(() => {
+    setImagePreview(details?.profile_picture || null);
+  }, [details]);
+
   const handleSave = async () => {
     setUser(details);
     let valid = false;

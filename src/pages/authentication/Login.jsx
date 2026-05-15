@@ -44,32 +44,24 @@ const Login = () => {
   };
 
   const handleLogin = async () => {
-    let valid = false;
-    const newErrors = { username: "", password: "" };
+    setErrors({ username: "", password: "" });
     handleOpen();
 
     const loginResponse = await UsersLogin(
       details.username.toLowerCase(),
       details.password
     );
-    console.log(loginResponse);
-    if (loginResponse.status === 200) {
-      valid = true;
-    }
-
-    setErrors(newErrors);
-    const data = loginResponse.data;
-
-    if (valid) {
-      //       const usersResponse = await UsersLogin(
-      //   details.username.toLowerCase(),
-      //   details.password
-      // );
-      login(data);
-      // Proceed with actual login logic here
-      navigate("/dashboard");
-    }
     handleClose();
+
+    if (loginResponse?.status === 200) {
+      login(loginResponse.data);
+      navigate("/dashboard");
+      return;
+    }
+
+    const message =
+      loginResponse?.data?.message || "Unable to sign in. Please try again.";
+    setErrors({ username: " ", password: message });
   };
 
   const isFormValid = details.username && details.password;

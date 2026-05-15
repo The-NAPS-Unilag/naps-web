@@ -50,6 +50,7 @@ const UploadResource = async (id, data, setUploadProgress) => {
       icon: "error",
       text: err?.response?.data?.message || err.message,
     });
+    return err.response ?? null;
   }
 };
 
@@ -79,6 +80,7 @@ const GetResourcesByLevel = async (level) => {
       icon: "error",
       text: err?.response?.data?.message || err.message,
     });
+    return err.response ?? null;
   }
 };
 

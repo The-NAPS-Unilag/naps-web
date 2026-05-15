@@ -6,7 +6,7 @@ import { GrAdd, GrGroup } from "react-icons/gr";
 import { LuPenLine } from "react-icons/lu";
 import { useParams, useNavigate } from "react-router-dom";
 import ForumTile from "./ForumTile";
-import { GetForums, JoinForum } from "../../apiCalls/forums";
+import { GetForums, JoinForum, GetForumThreads } from "../../apiCalls/forums";
 import socketService from "../../services/socketService";
 import { useAuth } from "../../context/AuthContext";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -38,6 +38,10 @@ const ForumTopic = () => {
                     )
                     if (foundForum) {
                         setForumData(foundForum)
+                        const threadsRes = await GetForumThreads(foundForum.id)
+                        if (threadsRes?.data) {
+                            setThreads(Array.isArray(threadsRes.data) ? threadsRes.data : [])
+                        }
                     }
                 }
             } catch (error) {
@@ -162,27 +166,26 @@ const ForumTopic = () => {
                     <div className="mt-7 flex flex-col gap-5">
                         <p className=" font-GeneralSans-Semibold">Posts</p>
 
-                        <ForumTile 
-                            studentName={"Adebayo Grace"}
-                            channelName={forumData?.name || topic}
-                            time={"Just now"}
-                            topic={'Help with Respiratory Physiology concept'}
-                            topicDetail={"I'm struggling to understand how the partial pressure of gases affects oxygen diffusion in the lungs. Can someone explain it in simple terms or share any useful materials?"}
-                            heartsNo={32}
-                            repliesNo={17}
-                            views={56}
-                        />
-
-                        <ForumTile 
-                            studentName={"Adebayo Grace"}
-                            channelName={forumData?.name || topic}
-                            time={"Just now"}
-                            topic={'Help with Respiratory Physiology concept'}
-                            topicDetail={"I'm struggling to understand how the partial pressure of gases affects oxygen diffusion in the lungs. Can someone explain it in simple terms or share any useful materials?"}
-                            heartsNo={12}
-                            repliesNo={3}
-                            views={22}
-                        />
+                        {threads.length > 0 ? (
+                            threads.map((thread) => (
+                                <ForumTile
+                                    key={thread.id}
+                                    studentName={[thread.created_by?.firstname, thread.created_by?.lastname].filter(Boolean).join(" ") || "Anonymous"}
+                                    channelName={forumData?.name || topic}
+                                    time={thread.created_on || "Just now"}
+                                    topic={thread.title}
+                                    topicDetail={thread.body}
+                                    heartsNo={thread.likes || 0}
+                                    repliesNo={thread.comment_count || 0}
+                                    views={thread.views || 0}
+                                />
+                            ))
+                        ) : (
+                            <div className="text-center py-8 text-gray-500 text-sm">
+                                <p>No posts in this forum yet.</p>
+                                <p className="mt-1">Be the first to start a discussion.</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </IconContext.Provider>

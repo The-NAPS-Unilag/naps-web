@@ -8,6 +8,12 @@ axios.interceptors.response.use(
     if (status === 401) {
       // eslint-disable-next-line no-console
       console.warn("401 Unauthorized from API", url);
+      const hasToken = !!localStorage.getItem("accessToken");
+      if (hasToken) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("user");
+        window.location.href = "/login";
+      }
     }
     return Promise.reject(error);
   }

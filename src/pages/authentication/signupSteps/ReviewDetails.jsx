@@ -49,9 +49,7 @@ const ReviewDetails = ({ details, setDetails }) => {
   };
 
   const handleCreateAccount = async () => {
-    let valid = false;
     handleOpen();
-    console.log(details);
 
     const signupResponse = await UsersCreate({
       firstname: details.name.split(" ")[0],
@@ -62,16 +60,11 @@ const ReviewDetails = ({ details, setDetails }) => {
       password: details.password,
     });
     handleClose();
-    console.log(signupResponse);
-    if (signupResponse.status === 201) {
-      valid = true;
-    }
 
-    if (valid) {
+    if (signupResponse?.status === 201 || signupResponse?.status === 200) {
       login(signupResponse.data);
       navigate(`/verifyAccount?fm=su&email=${details.email}`);
     }
-    console.log("created");
   };
 
   const Alert = ({ children, action }) => {

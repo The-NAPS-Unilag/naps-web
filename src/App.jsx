@@ -52,14 +52,14 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="resources" element={<Resources />}>
               <Route index element={<ResourceLevels />} />
-              <Route path="resources/:level" element={<ResourceFiles />} />
-              <Route path="/resources/addResource" element={<AddResource />} />
+              <Route path="addResource" element={<AddResource />} />
+              <Route path=":level" element={<ResourceFiles />} />
             </Route>
             <Route path="forums" element={<Forums />}>
               <Route index element={<ForumHome />} />
-              <Route path="/forums/forumPost" element={<ForumPost />} />
-              <Route path="/forums/response" element={<ForumResponse />} />
-              <Route path="/forums/topic/:topic" element={<ForumTopic />} />
+              <Route path="forumPost" element={<ForumPost />} />
+              <Route path="response" element={<ForumResponse />} />
+              <Route path="topic/:topic" element={<ForumTopic />} />
             </Route>
             <Route path="mentor-program" element={<MentorProgram />} />
             <Route path="my-mentor" element={<MyMentor />} />
