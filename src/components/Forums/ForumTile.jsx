@@ -1,59 +1,73 @@
-import ThreeDotsSvg from '../../assets/images/forumIcons/DotsThreeVertical.svg'
-import ShareSvg from '../../assets/images/forumIcons/ShareNetwork.svg'
-import EyeSvg from '../../assets/images/forumIcons/Eye.svg'
-import ChatSvg from '../../assets/images/forumIcons/Chat.svg'
-import HeartSvg from '../../assets/images/forumIcons/Heart.svg'
+/* eslint-disable react/prop-types */
 import { Link } from 'react-router-dom'
+import { MessageCircle, Eye } from 'lucide-react'
 
-function ForumTile({ studentName, channelName, time, topic, topicDetail,heartsNo, repliesNo, views }) {
+function getInitials(name) {
+    return (name || 'A').split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()
+}
+
+function ForumTile({ studentName, channelName, time, topic, topicDetail, repliesNo, views, threadId }) {
+    const responseUrl = threadId ? `/forums/response/${threadId}` : null
+
     return (
-        <div className="p-3 border-[0.25px] border-[#CACDD5] rounded-lg text-xs">
-            <div className="flex justify-between max-md:flex-col">
-                <div className="flex items-start md:items-center gap-[11px] max-md:flex-col">
-                    <div className="flex items-center gap-1">
-                        <div className="w-6 h-6 rounded-full bg-[#D9D9D9]"></div>
-                        <p className="font-GeneralSans-Medium">{studentName} in <Link to={`/forums/topic/${channelName}`}><span className="text-[#025663]">{channelName}</span></Link> </p>
+        <div className="bg-white rounded-2xl border border-gray-100 hover:border-[#026C7C]/30 hover:shadow-sm transition-all duration-200 p-4">
+            {/* Header row */}
+            <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                    <div className="w-8 h-8 rounded-full bg-[#E6F0F2] flex items-center justify-center text-[#026C7C] text-xs font-GeneralSans-Semibold shrink-0">
+                        {getInitials(studentName)}
                     </div>
-                    <div className="flex items-center gap-1 max-md:ml-6">
-                        <div className="w-[3px] h-[3px] rounded-full bg-[#989AA0]"></div>
-                        <span className="text-[#989AA0] text-[10px]">{time}</span>
+                    <div className="flex items-center gap-1.5 min-w-0 text-xs">
+                        <span className="font-GeneralSans-Medium text-gray-700 truncate max-w-[120px]">{studentName}</span>
+                        <span className="text-gray-400 shrink-0">in</span>
+                        <Link
+                            to={`/forums/topic/${encodeURIComponent(channelName)}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-[#026C7C] font-GeneralSans-Medium hover:underline truncate max-w-[100px] shrink-0"
+                        >
+                            {channelName}
+                        </Link>
+                        <span className="text-gray-400 shrink-0">·</span>
+                        <span className="text-gray-400 font-GeneralSans shrink-0">{time}</span>
                     </div>
-                </div>
-
-                <div className="flex items-center gap-2 max-md:mt-3">
-                    <button className="bg-blue-500 text-[#FAFAFB] rounded-lg py-1 px-4 h-8 font-GeneralSans-Medium text-sm">Join</button>
-                    {/* Hamburger Icon */}
-                    <img src={ThreeDotsSvg} alt=":" className="w-5 h-5 cursor-pointer"/>
                 </div>
             </div>
 
-            <div className="mt-5 mb-8 text-[#353535]">
-                <h1 className="text-base font-GeneralSans-Semibold mb-[14px]">{topic}</h1>
-                <p className="text-sm font-GeneralSans-Medium">{topicDetail}</p>
-            </div>
-
-            <div className='flex flex-row justify-between text-sm font-GeneralSans-Medium text-[#797B80]'>
-                <div className='flex gap-6'>
-                    {/* 3 Img's */}
-                    <div className='flex gap-1 cursor-pointer'>
-                        <img src={HeartSvg} alt="heart" className='' />
-                        <p>{heartsNo}</p>
-                    </div>
-                    <Link to={"/forums/response"} >
-                        <div className='flex gap-1 cursor-pointer'>
-                            <img src={ChatSvg} alt="chat" className='' />
-                            <p>{repliesNo}</p>
-                        </div>
+            {/* Content */}
+            <div className="mb-4 pl-10">
+                {responseUrl ? (
+                    <Link to={responseUrl}>
+                        <h2 className="font-GeneralSans-Semibold text-gray-800 text-sm mb-1.5 hover:text-[#026C7C] transition-colors line-clamp-2 leading-snug">
+                            {topic}
+                        </h2>
                     </Link>
-                    <div className='flex gap-1 cursor-pointer'>
-                        <img src={EyeSvg} alt="eye" className='' />
-                        <p>{views}</p>
-                    </div>
-                </div>
+                ) : (
+                    <h2 className="font-GeneralSans-Semibold text-gray-800 text-sm mb-1.5 line-clamp-2 leading-snug">
+                        {topic}
+                    </h2>
+                )}
+                <p className="text-xs text-gray-500 font-GeneralSans line-clamp-3 leading-relaxed">
+                    {topicDetail}
+                </p>
+            </div>
 
-                <div>
-                    <img src={ShareSvg} alt="share" />
-                </div>
+            {/* Stats row */}
+            <div className="flex items-center gap-5 pl-10 text-xs text-gray-400 font-GeneralSans">
+                {responseUrl ? (
+                    <Link to={responseUrl} className="flex items-center gap-1 hover:text-[#026C7C] transition-colors">
+                        <MessageCircle size={13} />
+                        <span>{repliesNo}</span>
+                    </Link>
+                ) : (
+                    <span className="flex items-center gap-1">
+                        <MessageCircle size={13} />
+                        <span>{repliesNo}</span>
+                    </span>
+                )}
+                <span className="flex items-center gap-1">
+                    <Eye size={13} />
+                    <span>{views}</span>
+                </span>
             </div>
         </div>
     )

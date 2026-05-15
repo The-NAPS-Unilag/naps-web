@@ -163,6 +163,20 @@ const CreateForum = async (data) => {
 };
 
 /**
+ * Get the list of forum IDs the current user has joined
+ * @returns {Promise} - { forum_ids: number[] }
+ */
+const GetMyMemberships = async () => {
+  const url = `${apiUrl}/forums/my-memberships`;
+  try {
+    const response = await axios.get(url, { headers: getAuthHeader() });
+    return response;
+  } catch {
+    return { data: { forum_ids: [] } };
+  }
+};
+
+/**
  * Join a forum
  * @param {number} forumId - Forum ID to join
  * @returns {Promise} - Join response
@@ -402,6 +416,7 @@ export {
   ExploreForums,
   GetRecommendedForums,
   GetTopContributors,
+  GetMyMemberships,
   CreateForum,
   JoinForum,
   CreateThread,

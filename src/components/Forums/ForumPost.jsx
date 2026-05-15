@@ -1,52 +1,40 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import BackButton from '../resources/BackButton'
-import FileSvg from '../../assets/images/forumIcons/File.svg'
 import { CreateThread, GetForums } from '../../apiCalls/forums'
+import { AlertCircle } from 'lucide-react'
 
 const ForumPost = () => {
     const [searchParams] = useSearchParams()
     const navigate = useNavigate()
     const forumIdFromUrl = searchParams.get('forumId')
     const forumNameFromUrl = searchParams.get('forumName')
-    
+
     const [postTitle, setPostTitle] = useState('')
     const [postBody, setPostBody] = useState('')
     const [selectedForum, setSelectedForum] = useState(forumIdFromUrl || '')
-    const [attachment, setAttachment] = useState(null)
     const [forums, setForums] = useState([])
+    const [loadingForums, setLoadingForums] = useState(true)
     const [submitting, setSubmitting] = useState(false)
 
     useEffect(() => {
         const fetchForums = async () => {
+            setLoadingForums(true)
             try {
                 const res = await GetForums()
-                if (res?.data) {
-                    setForums(Array.isArray(res.data) ? res.data : [])
-                }
-            } catch (error) {
-                console.error('Failed to fetch forums:', error)
+                if (res?.data) setForums(Array.isArray(res.data) ? res.data : [])
+            } catch (err) {
+                console.error('Failed to fetch forums:', err)
+            } finally {
+                setLoadingForums(false)
             }
         }
         fetchForums()
     }, [])
 
-    const handleFileChange = (e) => {
-        const file = e.target.files?.[0]
-        if (file) {
-            setAttachment(file)
-        }
-    }
-
     const handlePublish = async () => {
-        if (!postTitle.trim() || !postBody.trim()) {
-            return
-        }
-
         const targetForumId = selectedForum || forumIdFromUrl
-        if (!targetForumId) {
-            return
-        }
+        if (!postTitle.trim() || !postBody.trim() || !targetForumId) return
 
         setSubmitting(true)
         try {
@@ -54,116 +42,129 @@ const ForumPost = () => {
                 title: postTitle,
                 body: postBody,
             })
-
             if (response?.status === 201) {
-                navigate(`/forums/topic/${forumNameFromUrl || selectedForum}`)
+                const forumName = forumNameFromUrl || forums.find(f => f.id.toString() === targetForumId)?.name || targetForumId
+                navigate(`/forums/topic/${encodeURIComponent(forumName)}`)
             }
-        } catch (error) {
-            console.error('Failed to create thread:', error)
+        } catch (err) {
+            console.error('Failed to create thread:', err)
         } finally {
             setSubmitting(false)
         }
     }
 
-    const isFormValid = postTitle.trim() && postBody.trim() && (selectedForum || forumIdFromUrl)
     const maxLength = 3000
     const remainingChars = maxLength - postBody.length
+    const targetForumId = selectedForum || forumIdFromUrl
+    const isFormValid = postTitle.trim() && postBody.trim() && targetForumId
+
+    const missingItems = []
+    if (!targetForumId) missingItems.push('select a forum')
+    if (!postTitle.trim()) missingItems.push('enter a title')
+    if (!postBody.trim()) missingItems.push('write the post body')
+
+    const selectedForumName = forumNameFromUrl || forums.find(f => f.id.toString() === selectedForum)?.name
 
     return (
-        <>
-            <div className='flex max-sm:flex-col max-sm:gap-4 justify-between mt-10 md:max-w-[975px]'>
-                <div><BackButton /></div>
+        <div className="mt-8 max-w-2xl mx-auto px-4 sm:px-6">
+            <div className="mb-6">
+                <BackButton />
+            </div>
 
-                <div className="flex-1 md:max-w-[706px]">
-                    <h1 className="text-2xl font-GeneralSans-Semibold text-[#026C7C] mb-8">Create Post</h1>
-                
-                    <div className="text-sm">
-                        <select 
-                            name="forum" 
-                            id="forum-select"
-                            className="bg-transparent font-GeneralSans rounded-lg border-[0.25px] w-[236px] py-3 px-4 mb-6 text-[#797B80]"
-                            value={selectedForum}
-                            onChange={(e) => setSelectedForum(e.target.value)}
-                            disabled={!!forumIdFromUrl}
-                        >
-                            <option value="">Select Category / Topic</option >
-                            {forums.map((forum) => (
-                                <option key={forum.id} value={forum.id}>
-                                    {forum.name}
-                                </option>
-                            ))}
-                        </select>
-                        
-                        <div className="mb-[18px] flex flex-col">
-                            <label htmlFor="post-title" className="mb-2 text-sm font-GeneralSans-Semibold">Post Title</label>
-                            <input 
-                                type="text" 
-                                name="post-title" 
-                                id="post-title" 
-                                placeholder="Enter Post Title" 
-                                className="bg-transparent w-full border-[0.25px] border-[#CACDD5] p-3 rounded-lg placeholder:text-[#CACDD5] placeholder:font-GeneralSans-Semibold outline-none"
-                                value={postTitle}
-                                onChange={(e) => setPostTitle(e.target.value)}
-                                maxLength={200}
-                            />
-                        </div>
-                        <div className="flex flex-col ">
-                            <label htmlFor="post-body" className="mb-2 text-sm font-GeneralSans-Semibold">Body</label>
-                            <textarea 
-                                name="post-body" 
-                                id="post-body" 
-                                cols="30" 
-                                rows="10"
-                                maxLength={maxLength} 
-                                placeholder="Enter body text"
-                                className="bg-transparent border-[0.25px] border-[#CACDD5] rounded-lg p-3 placeholder:text-[#CACDD5] placeholder:font-GeneralSans-Semibold outline-none"
-                                value={postBody}
-                                onChange={(e) => setPostBody(e.target.value)}
-                            />
-                        </div>
+            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+                <h1 className="text-xl font-GeneralSans-Semibold text-[#026C7C] mb-6">Create Post</h1>
 
-                        <p className="text-[10px] text-right mb-[18px]">{remainingChars} characters left</p>
-
-                        <div className="flex flex-col mb-[22px]">
-                            <label htmlFor="attachments" className="mb-2 text-sm font-GeneralSans-Semibold">Attach to Post</label>
-                            <div className="flex gap-4">
-                                <label htmlFor="file-input" className="cursor-pointer">
-                                    <img src={FileSvg} alt="attach file" className="shadow-sm p-2 rounded-lg hover:bg-gray-100" />
-                                </label>
-                                <input 
-                                    type="file" 
-                                    id="file-input" 
-                                    className="hidden"
-                                    onChange={handleFileChange}
-                                    accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
-                                />
-                                {attachment && (
-                                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                                        <span>{attachment.name}</span>
-                                        <button 
-                                            onClick={() => setAttachment(null)}
-                                            className="text-red-500 text-xs"
-                                        >
-                                            Remove
-                                        </button>
-                                    </div>
-                                )}
+                <div className="flex flex-col gap-5">
+                    {/* Forum selector */}
+                    <div>
+                        <label className="block text-sm font-GeneralSans-Semibold text-gray-700 mb-1.5">
+                            Forum <span className="text-red-400">*</span>
+                        </label>
+                        {forumIdFromUrl ? (
+                            <div className="flex items-center gap-2 bg-[#E6F0F2] text-[#026C7C] text-sm font-GeneralSans-Medium rounded-xl px-4 py-3">
+                                <span className="text-[#026C7C] font-GeneralSans-Semibold">#</span>
+                                {selectedForumName || 'Selected Forum'}
                             </div>
-                        </div>
-
-                        <div className="flex justify-end">
-                            <button 
-                                className="bg-[#2561ED] rounded-lg py-2 px-4 text-[#FAFAFB] font-GeneralSans-Semibold hover:bg-[#026C7C] disabled:opacity-50 disabled:cursor-not-allowed"
-                                onClick={handlePublish}
-                                disabled={!isFormValid || submitting}
+                        ) : (
+                            <select
+                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-GeneralSans text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#026C7C]/20 focus:border-[#026C7C] appearance-none cursor-pointer transition-all"
+                                value={selectedForum}
+                                onChange={(e) => setSelectedForum(e.target.value)}
+                                disabled={loadingForums}
                             >
-                                {submitting ? 'Publishing...' : 'Publish'}
-                            </button>
+                                <option value="">
+                                    {loadingForums ? 'Loading forums…' : forums.length === 0 ? 'No forums available' : 'Select a forum…'}
+                                </option>
+                                {forums.map((forum) => (
+                                    <option key={forum.id} value={forum.id}>
+                                        {forum.name}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+                    </div>
+
+                    {/* Post title */}
+                    <div>
+                        <label htmlFor="post-title" className="block text-sm font-GeneralSans-Semibold text-gray-700 mb-1.5">
+                            Post Title <span className="text-red-400">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="post-title"
+                            placeholder="What's your post about?"
+                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-GeneralSans placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#026C7C]/20 focus:border-[#026C7C] transition-all"
+                            value={postTitle}
+                            onChange={(e) => setPostTitle(e.target.value)}
+                            maxLength={200}
+                        />
+                        <div className="flex justify-end mt-1">
+                            <span className="text-[10px] text-gray-400 font-GeneralSans">{200 - postTitle.length} chars left</span>
                         </div>
+                    </div>
+
+                    {/* Post body */}
+                    <div>
+                        <label htmlFor="post-body" className="block text-sm font-GeneralSans-Semibold text-gray-700 mb-1.5">
+                            Body <span className="text-red-400">*</span>
+                        </label>
+                        <textarea
+                            id="post-body"
+                            rows={8}
+                            maxLength={maxLength}
+                            placeholder="Share your thoughts, questions, or ideas with the community…"
+                            className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-sm font-GeneralSans placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#026C7C]/20 focus:border-[#026C7C] resize-none transition-all leading-relaxed"
+                            value={postBody}
+                            onChange={(e) => setPostBody(e.target.value)}
+                        />
+                        <div className="flex justify-end mt-1">
+                            <span className={`text-[10px] font-GeneralSans ${remainingChars < 200 ? 'text-amber-500' : 'text-gray-400'}`}>
+                                {remainingChars} chars left
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Validation hint + submit */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2 border-t border-gray-100">
+                        {!isFormValid && missingItems.length > 0 && (
+                            <div className="flex items-center gap-1.5 text-xs text-amber-600 font-GeneralSans">
+                                <AlertCircle size={13} className="shrink-0" />
+                                <span>Please {missingItems.join(', ')} to publish.</span>
+                            </div>
+                        )}
+                        {isFormValid && <div />}
+
+                        <button
+                            onClick={handlePublish}
+                            disabled={!isFormValid || submitting}
+                            className="ml-auto bg-[#026C7C] text-white font-GeneralSans-Semibold text-sm rounded-xl px-6 py-2.5 hover:bg-[#025663] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        >
+                            {submitting ? 'Publishing…' : 'Publish Post'}
+                        </button>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 
