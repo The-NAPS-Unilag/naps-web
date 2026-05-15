@@ -1632,8 +1632,8 @@ socket.emit('leave_thread', {
 ### Listen for New Messages
 ```javascript
 socket.on('new_message', (data) => {
-  console.log('New message in thread:', data.thread_id);
-  console.log('Message:', data.message);
+  //console.log('New message in thread:', data.thread_id);
+  //console.log('Message:', data.message);
   // Update UI with new message
 });
 ```
@@ -1641,11 +1641,11 @@ socket.on('new_message', (data) => {
 ### Listen for User Events
 ```javascript
 socket.on('user_joined', (data) => {
-  console.log(`User ${data.user_id} joined thread ${data.thread_id}`);
+  //console.log(`User ${data.user_id} joined thread ${data.thread_id}`);
 });
 
 socket.on('user_left', (data) => {
-  console.log(`User ${data.user_id} left thread ${data.thread_id}`);
+  //console.log(`User ${data.user_id} left thread ${data.thread_id}`);
 });
 ```
 
@@ -1875,7 +1875,7 @@ function LoginForm() {
     
     try {
       const response = await api.login(email, password);
-      console.log('Login successful:', response);
+      //console.log('Login successful:', response);
       // Redirect to dashboard or update app state
     } catch (error) {
       alert('Login failed: ' + error.message);

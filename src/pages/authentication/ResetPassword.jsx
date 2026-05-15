@@ -63,7 +63,7 @@ const ResetPassword = () => {
       details.password
     );
     handleClose();
-    console.log(resetResponse);
+    //console.log(resetResponse);
     if (resetResponse.status === 200) {
       valid = true;
       MySwal.fire({

@@ -42,7 +42,7 @@ const ProfileOverview = () => {
   const handleOpen = () => {
     setOpen(true);
   };
-  console.log(user);
+  //console.log(user);
   const [details, setDetails] = useState({});
   // File validation and preview logic
   const [imagePreview, setImagePreview] = useState(
@@ -62,7 +62,7 @@ const ProfileOverview = () => {
     setUser(details);
     let valid = false;
     handleOpen();
-    console.log(details);
+    //console.log(details);
 
     const formData = new FormData();
     formData.append("current_level", details.current_level);
@@ -70,7 +70,7 @@ const ProfileOverview = () => {
     formData.append("bio", details.bio);
     const updateResponse = await UsersUpdate(user?.id, formData);
 
-    console.log(updateResponse);
+    //console.log(updateResponse);
     if (updateResponse.status === 200) {
       valid = true;
     }
@@ -82,7 +82,7 @@ const ProfileOverview = () => {
       }
     }
     handleClose();
-    console.log("created");
+    //console.log("created");
   };
 
   const handleImageChange = (e) => {

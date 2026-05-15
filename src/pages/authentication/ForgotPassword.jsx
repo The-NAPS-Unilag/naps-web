@@ -34,7 +34,7 @@ const ForgotPassword = () => {
       details.username.toLowerCase()
     );
     handleClose();
-    console.log(forgotPasswordResponse);
+    //console.log(forgotPasswordResponse);
     if (forgotPasswordResponse?.status === 200) {
       valid = true;
     }

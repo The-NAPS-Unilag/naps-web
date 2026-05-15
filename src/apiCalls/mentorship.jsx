@@ -42,7 +42,7 @@ const ApplyAsMentor = async (data) => {
     }
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -81,7 +81,7 @@ const ApplyAsMentee = async (data) => {
     }
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -109,7 +109,7 @@ const GetMyMentorships = async () => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     // Don't show error for empty mentorships
     if (err?.response?.status !== 404) {
       MySwal.fire({
@@ -152,7 +152,7 @@ const ScheduleSession = async (data) => {
     }
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -181,7 +181,7 @@ const GetMentorshipSessions = async (mentorshipId) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -199,7 +199,7 @@ const GetMyMentorApplication = async () => {
     const response = await axios.get(url, { headers: getAuthHeader() });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return { data: { application: null } };
   }
 };
@@ -213,7 +213,7 @@ const GetMyMenteeApplication = async () => {
     const response = await axios.get(url, { headers: getAuthHeader() });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return { data: { application: null } };
   }
 };

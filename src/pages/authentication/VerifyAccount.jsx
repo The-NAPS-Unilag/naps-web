@@ -54,7 +54,7 @@ const VerifyAccount = () => {
       details.otp
     );
     handleClose();
-    console.log(verifyResponse);
+    //console.log(verifyResponse);
     if (verifyResponse?.status === 200) {
       valid = true;
     }
@@ -86,7 +86,7 @@ const VerifyAccount = () => {
 
     const resendResponse = await UsersResendOTP(userEmail.toLowerCase());
     handleClose();
-    console.log(resendResponse);
+    //console.log(resendResponse);
     if (resendResponse.status === 200) {
       setTrialsLeft((prev) => Math.max(prev - 1, 0));
 

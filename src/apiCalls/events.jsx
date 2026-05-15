@@ -30,7 +30,7 @@ const GetEvents = async () => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -66,7 +66,7 @@ const GetUserRsvps = async () => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return null;
   }
 };
@@ -90,7 +90,7 @@ const GetEventById = async (eventId) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -118,7 +118,7 @@ const GetEventsByType = async (eventType) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -157,7 +157,7 @@ const RSVPEvent = async (eventId) => {
     }
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -197,7 +197,7 @@ const CancelRSVP = async (eventId) => {
     }
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -225,7 +225,7 @@ const CreateEvent = async (formData) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",

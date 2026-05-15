@@ -45,7 +45,7 @@ const ReviewDetails = ({ details, setDetails }) => {
   };
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
-    console.log(details);
+    //console.log(details);
   };
 
   const handleCreateAccount = async () => {

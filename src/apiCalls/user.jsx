@@ -25,7 +25,7 @@ const UsersCreate = async (data) => {
         return fd;
       }, new FormData());
 
-  console.log(data);
+  //console.log(data);
   try {
     const postsData = await axios.post(url, formData, {
       headers: {
@@ -34,7 +34,7 @@ const UsersCreate = async (data) => {
 
       },
     });
-    console.log(postsData);
+    //console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
     //   MySwal.fire({
     //     title: postsData.AxiosError.code,
@@ -45,7 +45,7 @@ const UsersCreate = async (data) => {
 
     return postsData;
   } catch (err) {
-    console.log(err.message);
+    //console.log(err.message);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -73,7 +73,7 @@ const UsersConfirmEmail = async (email, otp) => {
     otp,
   };
 
-  console.log(data);
+  //console.log(data);
   try {
     const postsData = await axios.post(url, data, {
       headers: {
@@ -82,7 +82,7 @@ const UsersConfirmEmail = async (email, otp) => {
 
       },
     });
-    console.log(postsData);
+    //console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
     //   MySwal.fire({
     //     title: postsData.AxiosError.code,
@@ -93,7 +93,7 @@ const UsersConfirmEmail = async (email, otp) => {
 
     return postsData;
   } catch (err) {
-    console.log(err.message);
+    //console.log(err.message);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -120,7 +120,7 @@ const UsersResendOTP = async (email) => {
     email,
   };
 
-  console.log(data);
+  //console.log(data);
   try {
     const postsData = await axios.post(url, data, {
       headers: {
@@ -129,7 +129,7 @@ const UsersResendOTP = async (email) => {
 
       },
     });
-    console.log(postsData);
+    //console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
     //   MySwal.fire({
     //     title: postsData.AxiosError.code,
@@ -140,7 +140,7 @@ const UsersResendOTP = async (email) => {
 
     return postsData;
   } catch (err) {
-    console.log(err.message);
+    //console.log(err.message);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -167,7 +167,7 @@ const UsersLogin = async (email, password) => {
     password,
   };
 
-  console.log(data);
+  //console.log(data);
   try {
     const postsData = await axios.post(url, data, {
       headers: {
@@ -176,7 +176,7 @@ const UsersLogin = async (email, password) => {
 
       },
     });
-    console.log(postsData);
+    //console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
     //   MySwal.fire({
     //     title: postsData.AxiosError.code,
@@ -187,7 +187,7 @@ const UsersLogin = async (email, password) => {
 
     return postsData;
   } catch (err) {
-    console.log(err.message);
+    //console.log(err.message);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -215,7 +215,7 @@ const UsersLoginMatric = async (matric_no, password) => {
     password,
   };
 
-  console.log(data);
+  //console.log(data);
   try {
     const postsData = await axios.post(url, data, {
       headers: {
@@ -224,7 +224,7 @@ const UsersLoginMatric = async (matric_no, password) => {
 
       },
     });
-    console.log(postsData);
+    //console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
     //   MySwal.fire({
     //     title: postsData.AxiosError.code,
@@ -235,7 +235,7 @@ const UsersLoginMatric = async (matric_no, password) => {
 
     return postsData;
   } catch (err) {
-    console.log(err.message);
+    //console.log(err.message);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -261,7 +261,7 @@ const UsersForgotPassword = async (email) => {
     email,
   };
 
-  console.log(data);
+  //console.log(data);
   try {
     const postsData = await axios.post(url, data, {
       headers: {
@@ -270,7 +270,7 @@ const UsersForgotPassword = async (email) => {
 
       },
     });
-    console.log(postsData);
+    //console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
     //   MySwal.fire({
     //     title: postsData.AxiosError.code,
@@ -281,7 +281,7 @@ const UsersForgotPassword = async (email) => {
 
     return postsData;
   } catch (err) {
-    console.log(err.message);
+    //console.log(err.message);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -309,7 +309,7 @@ const UsersResetPassword = async (email, otp, new_password) => {
     new_password,
   };
 
-  console.log(data);
+  //console.log(data);
   try {
     const postsData = await axios.post(url, data, {
       headers: {
@@ -318,7 +318,7 @@ const UsersResetPassword = async (email, otp, new_password) => {
 
       },
     });
-    console.log(postsData);
+    //console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
     //   MySwal.fire({
     //     title: postsData.AxiosError.code,
@@ -329,7 +329,7 @@ const UsersResetPassword = async (email, otp, new_password) => {
 
     return postsData;
   } catch (err) {
-    console.log(err.message);
+    //console.log(err.message);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -355,8 +355,8 @@ const UsersUpdate = async (id, data) => {
   //   ...userData,
   // };
 
-  console.log(data);
-  console.log("accessToken", getAccessToken());
+  //console.log(data);
+  //console.log("accessToken", getAccessToken());
   try {
     const postsData = await axios.put(url, data, {
       headers: {
@@ -366,7 +366,7 @@ const UsersUpdate = async (id, data) => {
         ...getAuthHeader(),
       },
     });
-    console.log(postsData);
+    //console.log(postsData);
     if (postsData.status === 200) {
       MySwal.fire({
         title: "Success",
@@ -384,7 +384,7 @@ const UsersUpdate = async (id, data) => {
 
     return postsData;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -417,7 +417,7 @@ const UsersGetMe = async () => {
     });
     return getsData;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -449,7 +449,7 @@ const UsersGetActivity = async (user_id) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return null;
   }
 };
@@ -458,7 +458,7 @@ const UsersGets = async () => {
   const MySwal = withReactContent(Swal);
   const url = `${apiUrl}/users`;
 
-  console.log(url);
+  //console.log(url);
 
   try {
     const getsData = await axios.get(url, {
@@ -470,7 +470,7 @@ const UsersGets = async () => {
     });
     return getsData;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -493,7 +493,7 @@ const UsersDelete = async (user_id) => {
   const MySwal = withReactContent(Swal);
   const url = `${apiUrl}/users/delete/${user_id}`;
 
-  console.log(url);
+  //console.log(url);
 
   try {
     const getsData = await axios.delete(url, {
@@ -505,7 +505,7 @@ const UsersDelete = async (user_id) => {
     });
     return getsData;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",

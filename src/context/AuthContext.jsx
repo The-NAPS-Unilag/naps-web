@@ -41,7 +41,7 @@ const AuthProvider = ({ children }) => {
   }, [accessToken, loading]);
 
   const login = (userData) => {
-    console.log(userData);
+    //console.log(userData);
     setUser(userData?.user);
     if (userData?.access_token) {
       setAccessToken(userData.access_token);

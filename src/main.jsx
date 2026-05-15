@@ -9,7 +9,7 @@ import "./apiCalls/axiosSetup";
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.getRegistrations().then((registrations) => {
     for (const registration of registrations) {
-      console.log("Unregistering service worker:", registration);
+      //console.log("Unregistering service worker:", registration);
       registration.unregister();
     }
   });

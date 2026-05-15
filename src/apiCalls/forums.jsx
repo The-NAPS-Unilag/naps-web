@@ -29,7 +29,7 @@ const GetForums = async () => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -57,7 +57,7 @@ const ExploreForums = async () => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -85,7 +85,7 @@ const GetRecommendedForums = async () => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -113,7 +113,7 @@ const GetTopContributors = async () => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -152,7 +152,7 @@ const CreateForum = async (data) => {
     }
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -202,7 +202,7 @@ const JoinForum = async (forumId) => {
     }
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -241,7 +241,7 @@ const CreateThread = async (forumId, data) => {
     }
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -270,7 +270,7 @@ const GetForumThreads = async (forumId) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -299,7 +299,7 @@ const GetThread = async (threadId) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -328,7 +328,7 @@ const GetMessages = async (threadId) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -372,7 +372,7 @@ const SendMessage = async (threadId, data) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -401,7 +401,7 @@ const LikeMessage = async (messageId) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",

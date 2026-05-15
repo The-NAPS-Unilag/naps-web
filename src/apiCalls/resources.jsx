@@ -17,7 +17,7 @@ const UploadResource = async (id, data, setUploadProgress) => {
   //   ...userData,
   // };
 
-  console.log(data);
+  //console.log(data);
   try {
     const postsData = await axios.post(url, data, {
       headers: {
@@ -33,7 +33,7 @@ const UploadResource = async (id, data, setUploadProgress) => {
         setUploadProgress(percent);
       },
     });
-    console.log(postsData);
+    //console.log(postsData);
     // if (postsData.status !== 201 || postsData.status !== 200) {
     //   MySwal.fire({
     //     title: postsData.AxiosError.code,
@@ -44,7 +44,7 @@ const UploadResource = async (id, data, setUploadProgress) => {
 
     return postsData;
   } catch (err) {
-    console.log(err.message);
+    //console.log(err.message);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
@@ -74,7 +74,7 @@ const GetResourcesByLevel = async (level) => {
     });
     return response;
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     MySwal.fire({
       title: err?.response?.data?.status || "Error",
       icon: "error",
