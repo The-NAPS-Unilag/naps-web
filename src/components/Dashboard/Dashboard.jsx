@@ -18,6 +18,7 @@ import { UsersGetActivity } from '../../apiCalls/user'
 import { GetEvents } from '../../apiCalls/events'
 import { GetResourcesByLevel } from '../../apiCalls/resources'
 import { GetMyMentorships } from '../../apiCalls/mentorship'
+import { GetForums } from '../../apiCalls/forums'
 
 
 
@@ -27,6 +28,7 @@ function Dashboard() {
     const [upcomingEvents, setUpcomingEvents] = useState([])
     const [recentResources, setRecentResources] = useState([])
     const [mentorProfile, setMentorProfile] = useState(null)
+    const [forums, setForums] = useState([])
 
     const formatTimeAgo = (dateStr) => {
         if (!dateStr) return ''
@@ -131,6 +133,20 @@ function Dashboard() {
         fetchMentor()
     }, [])
 
+    useEffect(() => {
+        const fetchForums = async () => {
+            const response = await GetForums()
+            if (!response?.data) {
+                setForums([])
+                return
+            }
+            const forumsData = Array.isArray(response.data) ? response.data : []
+            const sorted = [...forumsData].sort((a, b) => (b.thread_count || 0) - (a.thread_count || 0))
+            setForums(sorted.slice(0, 3))
+        }
+        fetchForums()
+    }, [])
+
     return (
         <>
             <div>
@@ -186,21 +202,18 @@ function Dashboard() {
                             src={Forums}
                             alt={'forums'}
                         >
-                            <DashboardItem
-                                topic={'Tips for preparing for exams'}
-                                details={'5 new replies and 7 likes'}
-                                btnValue={'View post'}
-                            />
-                            <DashboardItem
-                                topic={'Help with Respiratory Physiology concept'}
-                                details={'14 new replies'}
-                                btnValue={'View post'}
-                            />
-                            <DashboardItem
-                                topic={'Internship opportunities in Abuja?'}
-                                details={'12 new replies and 7 likes'}
-                                btnValue={'View post'}
-                            />
+                            {forums.length > 0 ? (
+                                forums.map((forum) => (
+                                    <DashboardItem
+                                        key={forum.id}
+                                        topic={forum.name}
+                                        details={`${forum.thread_count || 0} threads, ${forum.member_count || 0} members`}
+                                        btnValue={'View forum'}
+                                    />
+                                ))
+                            ) : (
+                                <p className="text-xs text-gray-500">No forums available yet.</p>
+                            )}
                         </DashboardChild>
                     </Link>
 
