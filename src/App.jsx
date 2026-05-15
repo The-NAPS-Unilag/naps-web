@@ -12,6 +12,7 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import ProfileOverview from "./pages/profileOverview";
 import ResetPassword from "./pages/authentication/ResetPassword";
 import UpcomingEvents from "./pages/upcomingEvents";
+import ProposeEvent from "./pages/ProposeEvent";
 import Resources from "./pages/Resources";
 // import Resources from "./pages/Resources";
 import Forums from "./pages/Forums";
@@ -64,6 +65,7 @@ function App() {
             <Route path="mentor-program" element={<MentorProgram />} />
             <Route path="my-mentor" element={<MyMentor />} />
             <Route path="upcoming-events" element={<UpcomingEvents />} />
+            <Route path="upcoming-events/propose" element={<ProposeEvent />} />
             <Route path="profile-overview" element={<ProfileOverview />} />
           </Route>
         </Routes>

@@ -190,10 +190,40 @@ const GetMentorshipSessions = async (mentorshipId) => {
   }
 };
 
+/**
+ * Get the current user's own mentor application status
+ */
+const GetMyMentorApplication = async () => {
+  const url = `${apiUrl}/mentorship/my-mentor-application`;
+  try {
+    const response = await axios.get(url, { headers: getAuthHeader() });
+    return response;
+  } catch (err) {
+    console.log(err);
+    return { data: { application: null } };
+  }
+};
+
+/**
+ * Get the current user's own mentee application status
+ */
+const GetMyMenteeApplication = async () => {
+  const url = `${apiUrl}/mentorship/my-mentee-application`;
+  try {
+    const response = await axios.get(url, { headers: getAuthHeader() });
+    return response;
+  } catch (err) {
+    console.log(err);
+    return { data: { application: null } };
+  }
+};
+
 export {
   ApplyAsMentor,
   ApplyAsMentee,
   GetMyMentorships,
   ScheduleSession,
   GetMentorshipSessions,
+  GetMyMentorApplication,
+  GetMyMenteeApplication,
 };

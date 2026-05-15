@@ -207,6 +207,34 @@ const CancelRSVP = async (eventId) => {
   }
 };
 
+/**
+ * Propose a new event (goes to admin for approval)
+ * @param {FormData} formData - Event form data including optional image file
+ * @returns {Promise}
+ */
+const CreateEvent = async (formData) => {
+  const MySwal = withReactContent(Swal);
+  const url = `${apiUrl}/events/`;
+
+  try {
+    const response = await axios.post(url, formData, {
+      headers: {
+        ...getAuthHeader(),
+        // Let axios set Content-Type automatically for FormData (includes boundary)
+      },
+    });
+    return response;
+  } catch (err) {
+    console.log(err);
+    MySwal.fire({
+      title: err?.response?.data?.status || "Error",
+      icon: "error",
+      text: err?.response?.data?.message || err.message,
+    });
+    throw err;
+  }
+};
+
 export {
   GetEvents,
   GetEventById,
@@ -214,4 +242,5 @@ export {
   GetUserRsvps,
   RSVPEvent,
   CancelRSVP,
+  CreateEvent,
 };
