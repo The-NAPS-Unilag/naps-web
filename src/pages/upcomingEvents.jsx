@@ -1,20 +1,6 @@
-/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { useAuth } from "../context/AuthContext";
-import Backdrop from "@mui/material/Backdrop";
 import Search from "../assets/images/upcomingEventsIcons/Search.png";
 import Filter from "../assets/images/upcomingEventsIcons/Filter.png";
 import Location from "../assets/images/upcomingEventsIcons/Location.png";
@@ -22,6 +8,9 @@ import CalendarDots from "../assets/images/upcomingEventsIcons/CalendarDots.png"
 import Time from "../assets/images/upcomingEventsIcons/Time.png";
 import {
   CheckCircle2,
+  Plus,
+  Users,
+  
 } from "lucide-react";
 import UpcomingSmall1 from "../assets/images/upcomingSmall1.png";
 import UpcomingSmall2 from "../assets/images/upcomingSmall2.png";
@@ -29,17 +18,16 @@ import ArrowBack from "../assets/images/upcomingEventsIcons/ArrowBack.png";
 import SadFace from "../assets/images/upcomingEventsIcons/SadFace.png";
 import CircularProgress from "@mui/material/CircularProgress";
 import { GetEvents, GetUserRsvps, RSVPEvent, CancelRSVP } from "../apiCalls/events";
+import { useNavigate } from "react-router-dom";
 import AddToCalendarDropdown from "../components/AddToCalendar";
 
 const UpcomingEvents = () => {
-  const { user } = useAuth();
-  const [open, setOpen] = useState(false);
-  const handleClose = () => setOpen(false);
-  const handleOpen = () => setOpen(true);
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(null);
 
   // Placeholder images for events without images
   const placeholderImages = [UpcomingSmall1, UpcomingSmall2];
@@ -144,75 +132,41 @@ const UpcomingEvents = () => {
     social: "bg-pink-700",
   };
 
-  const handleRSVP = async (id) => {
-    const event = eventData.find((e) => e.id === id);
-    if (!event) return;
+  const handleRSVP = async (id, e) => {
+    e?.stopPropagation();
+    const event = eventData.find((ev) => ev.id === id);
+    if (!event || actionLoading === id) return;
 
-    handleOpen();
+    setActionLoading(id);
     try {
       if (event.added) {
         await CancelRSVP(id);
+        const update = { added: false, rsvp_count: Math.max(0, event.rsvp_count - 1) };
+        setEventData((prev) => prev.map((ev) => ev.id === id ? { ...ev, ...update } : ev));
+        if (selectedEvent?.id === id) setSelectedEvent((prev) => ({ ...prev, ...update }));
       } else {
         await RSVPEvent(id);
+        const update = { added: true, rsvp_count: event.rsvp_count + 1 };
+        setEventData((prev) => prev.map((ev) => ev.id === id ? { ...ev, ...update } : ev));
+        if (selectedEvent?.id === id) setSelectedEvent((prev) => ({ ...prev, ...update }));
       }
-      // Update local state after successful API call
-      setEventData((prevData) =>
-        prevData.map((e) =>
-          e.id === id ? { ...e, added: !e.added } : e
-        )
-      );
-      // Also update selected event if viewing detail
-      if (selectedEvent?.id === id) {
-        setSelectedEvent((prev) => ({ ...prev, added: !prev.added }));
-      }
-    } catch (error) {
-      console.error("RSVP operation failed:", error);
+    } catch {
+      // error shown by RSVPEvent/CancelRSVP via Swal
     } finally {
-      handleClose();
+      setActionLoading(null);
     }
   };
 
-  const Alert = ({ children, action }) => {
-    return (
-      <AlertDialog>
-        <AlertDialogTrigger
-          asChild
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          {children}
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Proceed to continue</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to continue?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="flex flex-col">
-            <AlertDialogAction asChild>
-              <Button
-                variant="ghost"
-                onClick={(e) => action(e)}
-                className="bg-main text-[18px] rounded-lg text-white w-full"
-              >
-                Proceed
-              </Button>
-            </AlertDialogAction>
-            <AlertDialogCancel asChild>
-              <Button
-                variant="ghost"
-                size="default"
-                className="text-main text-[18px] rounded-lg border border-main bg-white w-full"
-              >
-                Close
-              </Button>
-            </AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    );
+  const getRsvpButtonProps = (event) => {
+    const spotsLeft = event.capacity - event.rsvp_count;
+    const isLoading = actionLoading === event.id;
+    if (!event.is_open_for_registration)
+      return { label: "Registration Closed", disabled: true, className: "w-full mt-2 bg-gray-100 text-gray-400 cursor-not-allowed border-0" };
+    if (spotsLeft <= 0 && !event.added)
+      return { label: "Event Full", disabled: true, className: "w-full mt-2 bg-gray-100 text-gray-400 cursor-not-allowed border-0" };
+    if (event.added)
+      return { label: isLoading ? "Cancelling…" : "Cancel RSVP", disabled: isLoading, className: "w-full mt-2 bg-white border border-red-300 text-red-500 hover:bg-red-50" };
+    return { label: isLoading ? "Registering…" : "RSVP Now", disabled: isLoading, className: "w-full mt-2 bg-main text-white hover:opacity-90" };
   };
 
   const filteredEvents = eventData.filter((event) => {
@@ -253,19 +207,18 @@ const UpcomingEvents = () => {
             {selectedEvent.name}
           </h1>
           <div className="md:flex md:items-center md:space-x-2 space-y-2 md:space-y-0">
-            <Alert
-              action={() => {
-                handleRSVP(selectedEvent.id);
-              }}
-            >
-              <Button
-                className=" flex items-center space-x-1 bg-main text-white"
-              >
-                <span>
-                  {selectedEvent.added ? "Already RSVP'd" : "RSVP Now"}
-                </span>
-              </Button>
-            </Alert>
+            {(() => {
+              const btn = getRsvpButtonProps(selectedEvent);
+              return (
+                <Button
+                  onClick={(e) => handleRSVP(selectedEvent.id, e)}
+                  disabled={btn.disabled}
+                  className={btn.className.replace("w-full mt-2 ", "")}
+                >
+                  {btn.label}
+                </Button>
+              );
+            })()}
             <AddToCalendarDropdown
               title={selectedEvent.name}
               start={selectedEvent.rawDate ? `${selectedEvent.rawDate}T${selectedEvent.rawTime || "00:00:00"}` : new Date().toISOString()}
@@ -300,10 +253,14 @@ const UpcomingEvents = () => {
             />
             <span>{selectedEvent.type}</span>
           </span>
+          <span className="text-xs text-gray-500 flex items-center gap-1 px-2 py-1">
+            <Users size={13} />
+            {selectedEvent.rsvp_count}/{selectedEvent.capacity} registered
+          </span>
           {selectedEvent.added && (
             <span className="text-xs bg-green-100 flex items-center space-x-1 text-green-700 px-2 py-1 rounded-full">
               <CheckCircle2 size={14} />
-              <span>{"RSVP'd"}</span>
+              <span>RSVP&apos;d</span>
             </span>
           )}
         </div>
@@ -324,9 +281,18 @@ const UpcomingEvents = () => {
   // Main event list view
   return (
     <div>
-      <p className="text-[36px] font-GeneralSans-Semibold text-[#522374]">
-        Upcoming Events
-      </p>
+      <div className="flex items-center justify-between mb-0">
+        <p className="text-[36px] font-GeneralSans-Semibold text-[#522374]">
+          Upcoming Events
+        </p>
+        <button
+          onClick={() => navigate('/upcoming-events/propose')}
+          className="flex items-center gap-2 bg-[#522374] text-white text-sm font-GeneralSans-Medium px-4 py-2.5 rounded-xl hover:bg-[#3d1a57] transition-colors"
+        >
+          <Plus size={15} />
+          Propose Event
+        </button>
+      </div>
       <div className="w-full mt-10">
         <div className="sm:flex sm:justify-between sm:space-x-2 sm:space-y-0 space-y-2 w-full">
           <div className="w-full border border-gray-300 px-4 rounded-md relative flex items-center space-x-2">
@@ -376,35 +342,41 @@ const UpcomingEvents = () => {
               <div className="flex flex-wrap items-center justify-between gap-2 mt-3">
                 <span
                   className={`text-xs px-2 py-1 capitalize rounded-full ${
-                    typeColors[event.type]
+                    typeColors[event.type] || "bg-gray-100 text-gray-600"
                   }`}
                 >
                   <div
                     className={`h-2 w-2 inline-block mr-[2px] rounded-full ${
-                      typeColors2[event.type]
+                      typeColors2[event.type] || "bg-gray-500"
                     }`}
                   />{" "}
                   {event.type}
                 </span>
-                {event.added && (
-                  <span className="text-xs bg-green-100 flex items-center space-x-1 text-green-700 px-2 py-1 rounded-full">
-                    <CheckCircle2 size={14} />
-                    <span>{"RSVP'd"}</span>
-                  </span>
-                )}
+                <span className="text-xs text-gray-500 flex items-center gap-1">
+                  <Users size={12} />
+                  {event.rsvp_count}/{event.capacity}
+                  {event.capacity - event.rsvp_count > 0 && !event.added && (
+                    <span className="text-gray-400">· {event.capacity - event.rsvp_count} left</span>
+                  )}
+                  {event.added && (
+                    <span className="text-green-600 flex items-center gap-0.5 ml-1">
+                      <CheckCircle2 size={12} /> RSVP&apos;d
+                    </span>
+                  )}
+                </span>
               </div>
-              <Alert
-                action={() => {
-                  handleRSVP(event.id);
-                }}
-              >
-                <Button
-                  onClick={(e) => e.stopPropagation()}
-                  className=" flex items-center space-x-1 my-2 bg-main text-white"
-                >
-                  <span>{event.added ? "Already RSVP'd" : "RSVP Now"}</span>
-                </Button>
-              </Alert>
+              {(() => {
+                const btn = getRsvpButtonProps(event);
+                return (
+                  <Button
+                    onClick={(e) => handleRSVP(event.id, e)}
+                    disabled={btn.disabled}
+                    className={btn.className}
+                  >
+                    {btn.label}
+                  </Button>
+                );
+              })()}
 
               <AddToCalendarDropdown
                 title={event.name}
@@ -427,13 +399,6 @@ const UpcomingEvents = () => {
         )}
       </div>
 
-      <Backdrop
-        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
-        open={open}
-        onClick={handleClose}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
     </div>
   );
 };

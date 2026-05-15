@@ -12,8 +12,10 @@ import { SiGooglecalendar, SiApple } from "react-icons/si";
 import { PiMicrosoftOutlookLogo } from "react-icons/pi";
 
 // Utility to format dates for ICS and providers
-const formatDateForLink = (date) =>
-  date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+const formatDateForLink = (date) => {
+  if (!date || isNaN(date.getTime())) return "";
+  return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+};
 
 // Detect preferred calendar provider from browser/device
 const detectPreferredProvider = () => {
@@ -33,8 +35,10 @@ export default function AddToCalendarDropdown({
   description,
   recurrenceRule = null, // e.g., "FREQ=WEEKLY;COUNT=10"
 }) {
-  const startDate = formatDateForLink(new Date(start));
-  const endDate = formatDateForLink(new Date(end));
+  const startObj = new Date(start);
+  const endObj = new Date(end);
+  const startDate = formatDateForLink(startObj);
+  const endDate = formatDateForLink(endObj);
 
   // Provider URLs
   const googleUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
@@ -45,11 +49,7 @@ export default function AddToCalendarDropdown({
 
   const outlookUrl = `https://outlook.live.com/owa/?path=/calendar/action/compose&subject=${encodeURIComponent(
     title
-  )}&body=${encodeURIComponent(description)}&startdt=${new Date(
-    start
-  ).toISOString()}&enddt=${new Date(
-    end
-  ).toISOString()}&location=${encodeURIComponent(location)}`;
+  )}&body=${encodeURIComponent(description)}&startdt=${isNaN(startObj.getTime()) ? "" : startObj.toISOString()}&enddt=${isNaN(endObj.getTime()) ? "" : endObj.toISOString()}&location=${encodeURIComponent(location)}`;
 
   const yahooUrl = `https://calendar.yahoo.com/?v=60&view=d&type=20&title=${encodeURIComponent(
     title
