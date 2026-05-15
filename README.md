@@ -12,6 +12,11 @@ For full route reference, see `docs/API_ROUTES.md`.
 - **Forum send message**: The response returns the message object under the key `message_data` (not `message`)
 - **Admin login**: Requires both `X-API-Key` header AND valid admin credentials
 
+### Recent Updates (May 2026)
+- `Forum.to_dict()` now includes `member_count` and `thread_count` — use these directly instead of computing from a separate call
+- New endpoint `GET /api/forums/{forum_id}/threads` lists all threads in a forum (newest first), public (no JWT required). Frontend uses this via `GetForumThreads(forumId)` in `src/apiCalls/forums.jsx`
+- Backend now has `app.url_map.strict_slashes = False`, so trailing-slash mismatches no longer trigger CORS-breaking 308 redirects
+
 ### Recent Updates (March 2026)
 - Login response now includes `is_super_admin` and `is_active` fields
 - Forum message response uses `message_data` key for the message object
@@ -881,7 +886,8 @@ X-API-Key: your-api-key
     "description": "General discussions for all students",
     "is_general": true,
     "member_count": 150,
-    "created_at": "2024-01-01T00:00:00"
+    "thread_count": 23,
+    "created_on": "2024-01-01T00:00:00"
   }
 ]
 ```
@@ -934,7 +940,40 @@ Authorization: Bearer jwt-token-here
 }
 ```
 
-### 4. Create Thread in Forum
+### 4. List Threads in a Forum
+**GET** `/api/forums/{forum_id}/threads`
+
+Public endpoint (no JWT required). Returns threads ordered newest-first.
+
+**Headers:**
+```
+X-API-Key: your-api-key
+```
+
+**Success Response (200):**
+```json
+[
+  {
+    "id": 501,
+    "title": "Help with Data Structures Assignment",
+    "body": "I'm having trouble with implementing binary trees...",
+    "forum_id": 2,
+    "created_by": {
+      "id": 123,
+      "firstname": "John",
+      "lastname": "Doe",
+      "profile_picture": "https://s3-url.com/john.jpg"
+    },
+    "created_on": "2024-02-15T10:30:00",
+    "views": 12,
+    "comment_count": 4
+  }
+]
+```
+
+**Error Response (404):** `{ "message": "Forum not found." }`
+
+### 5. Create Thread in Forum
 **POST** `/api/forums/{forum_id}/threads`
 
 **Headers:**
@@ -960,13 +999,21 @@ Content-Type: application/json
     "id": 501,
     "title": "Help with Data Structures Assignment",
     "body": "I'm having trouble with implementing binary trees...",
-    "created_by": 123,
-    "created_at": "2024-02-15T10:30:00"
+    "created_by": {
+      "id": 123,
+      "firstname": "John",
+      "lastname": "Doe",
+      "profile_picture": "https://s3-url.com/john.jpg"
+    },
+    "forum_id": 2,
+    "created_on": "2024-02-15T10:30:00",
+    "views": 0,
+    "comment_count": 0
   }
 }
 ```
 
-### 5. Get Thread Details
+### 6. Get Thread Details
 **GET** `/api/forums/threads/{thread_id}`
 
 **Headers:**
@@ -1002,7 +1049,7 @@ Authorization: Bearer jwt-token-here
 }
 ```
 
-### 6. Send Message in Thread
+### 7. Send Message in Thread
 **POST** `/api/forums/threads/{thread_id}/messages`
 
 **Headers:**
@@ -1036,7 +1083,7 @@ formData.append('attachment', fileObject); // optional
 }
 ```
 
-### 7. Get Thread Messages
+### 8. Get Thread Messages
 **GET** `/api/forums/threads/{thread_id}/messages`
 
 **Headers:**
@@ -1044,7 +1091,7 @@ formData.append('attachment', fileObject); // optional
 X-API-Key: your-api-key
 ```
 
-### 8. Like Message
+### 9. Like Message
 **POST** `/api/forums/messages/{message_id}/like`
 
 **Headers:**
@@ -1061,7 +1108,7 @@ Authorization: Bearer jwt-token-here
 }
 ```
 
-### 9. Explore Forums
+### 10. Explore Forums
 **GET** `/api/forums/explore`
 
 **Headers:**
@@ -1069,7 +1116,7 @@ Authorization: Bearer jwt-token-here
 X-API-Key: your-api-key
 ```
 
-### 10. Get Recommended Forums
+### 11. Get Recommended Forums
 **GET** `/api/forums/recommended`
 
 **Headers:**
@@ -1077,7 +1124,7 @@ X-API-Key: your-api-key
 X-API-Key: your-api-key
 ```
 
-### 11. Get Top Contributors
+### 12. Get Top Contributors
 **GET** `/api/forums/top-contributors`
 
 **Headers:**
