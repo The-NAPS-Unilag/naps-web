@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Eye, EyeClosed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { UsersLogin } from "../../apiCalls/user";
+import { UsersLogin, UsersLoginMatric } from "../../apiCalls/user";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const Login = () => {
+  const [mode, setMode] = useState("email"); // "email" | "matric"
   const [details, setDetails] = useState({
     username: "",
     password: "",
@@ -24,12 +25,8 @@ const Login = () => {
 
   const { login, accessToken } = useAuth();
   const [open, setOpen] = useState(false);
-  const handleClose = () => {
-    setOpen(false);
-  };
-  const handleOpen = () => {
-    setOpen(true);
-  };
+  const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
 
   const navigate = useNavigate();
 
@@ -39,6 +36,12 @@ const Login = () => {
     }
   }, [accessToken, navigate]);
 
+  const switchMode = (next) => {
+    setMode(next);
+    setDetails({ username: "", password: "" });
+    setErrors({ username: "", password: "" });
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
@@ -47,10 +50,11 @@ const Login = () => {
     setErrors({ username: "", password: "" });
     handleOpen();
 
-    const loginResponse = await UsersLogin(
-      details.username.toLowerCase(),
-      details.password
-    );
+    const loginResponse =
+      mode === "matric"
+        ? await UsersLoginMatric(details.username, details.password)
+        : await UsersLogin(details.username.toLowerCase(), details.password);
+
     handleClose();
 
     if (loginResponse?.status === 200) {
@@ -80,19 +84,45 @@ const Login = () => {
               community
             </p>
           </div>
-          <div className="mt-8">
+          <div className="mt-6 flex rounded-lg border border-gray-200 p-1 bg-gray-50 w-fit gap-1">
+            <button
+              onClick={() => switchMode("email")}
+              className={`px-4 py-1.5 rounded-md text-sm font-GeneralSans-Medium transition-colors ${
+                mode === "email"
+                  ? "bg-white text-main shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Email
+            </button>
+            <button
+              onClick={() => switchMode("matric")}
+              className={`px-4 py-1.5 rounded-md text-sm font-GeneralSans-Medium transition-colors ${
+                mode === "matric"
+                  ? "bg-white text-main shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              Matric No.
+            </button>
+          </div>
+          <div className="mt-6">
             <div className="space-y-2 mb-3">
-              <Label htmlFor="email" className="font-GeneralSans-Medium">
-                Matric Number / Email Address
+              <Label htmlFor="username" className="font-GeneralSans-Medium">
+                {mode === "matric" ? "Matric Number" : "Email Address"}
               </Label>
               <Input
                 type="text"
-                id="email"
+                id="username"
                 value={details.username}
                 onChange={(e) =>
                   setDetails({ ...details, username: e.target.value })
                 }
-                placeholder="Matric Number / Email Address"
+                placeholder={
+                  mode === "matric"
+                    ? "Enter your matric number"
+                    : "Enter your email address"
+                }
                 className={`${errors.username ? "border border-red-500" : ""}`}
               />
               {errors.username && (

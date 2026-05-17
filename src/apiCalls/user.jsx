@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import axios from "axios";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -251,6 +250,7 @@ const UsersLoginMatric = async (matric_no, password) => {
         window.location.replace("/");
       }
     });
+    return err.response ?? null;
   }
 };
 
@@ -449,7 +449,7 @@ const UsersGetActivity = async (user_id) => {
     });
     return response;
   } catch (err) {
-    //console.log(err);
+    console.log(err);
     return null;
   }
 };
