@@ -122,11 +122,11 @@ const MyMentor = () => {
 
   return (
     <div>
-      <h1 className="text-4xl font-GeneralSans-Semibold text-[#A5CC15]">
+      <h1 className="text-2xl md:text-4xl font-GeneralSans-Semibold text-[#A5CC15]">
         My Mentor
       </h1>
 
-      <div className="flex flex-col md:flex-row items-start gap-8 mt-12 justify-center">
+      <div className="flex flex-col md:flex-row items-start gap-4 md:gap-8 mt-8 md:mt-12 justify-center">
         {/* Mentor Image */}
         <div className="w-48 h-48 md:w-56 md:h-56 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
           <img

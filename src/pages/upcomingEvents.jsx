@@ -192,12 +192,12 @@ const UpcomingEvents = () => {
     // Event detail view
     return (
       <div className="p-4">
-        <p className="text-[36px] font-GeneralSans-Semibold text-[#522374]">
+        <p className="text-2xl md:text-[36px] font-GeneralSans-Semibold text-[#522374]">
           Upcoming Events
         </p>
         <div
           onClick={() => setSelectedEvent(null)}
-          className="flex items-center mb-4 mt-10 cursor-pointer w-fit"
+          className="flex items-center mb-4 mt-6 cursor-pointer w-fit"
         >
           <img src={ArrowBack} className="mr-2" />
           Back
@@ -267,7 +267,7 @@ const UpcomingEvents = () => {
         <img
           src={selectedEvent.image}
           alt={selectedEvent.name}
-          className="w-full h-[300px] object-cover rounded-lg"
+          className="w-full h-48 md:h-[300px] object-cover rounded-lg"
         />
         <div className=" mt-4">
           <p className="font-GeneralSans-Medium">About</p>
@@ -282,12 +282,12 @@ const UpcomingEvents = () => {
   return (
     <div>
       <div className="flex items-center justify-between mb-0">
-        <p className="text-[36px] font-GeneralSans-Semibold text-[#522374]">
+        <p className="text-xl md:text-[36px] font-GeneralSans-Semibold text-[#522374]">
           Upcoming Events
         </p>
         <button
           onClick={() => navigate('/upcoming-events/propose')}
-          className="flex items-center gap-2 bg-[#522374] text-white text-sm font-GeneralSans-Medium px-4 py-2.5 rounded-xl hover:bg-[#3d1a57] transition-colors"
+          className="flex items-center gap-2 bg-[#522374] text-white text-sm font-GeneralSans-Medium px-3 py-2 md:px-4 md:py-2.5 rounded-xl hover:bg-[#3d1a57] transition-colors shrink-0"
         >
           <Plus size={15} />
           Propose Event
@@ -326,7 +326,7 @@ const UpcomingEvents = () => {
               <img
                 src={event.image}
                 alt={event.name}
-                className="h-[180px] w-full object-cover rounded-md"
+                className="h-36 md:h-[180px] w-full object-cover rounded-md"
               />
               <p className="font-GeneralSans-Medium mt-3">{event.name}</p>
               <div className="flex justify-between items-center text-sm text-gray-600 mt-2 space-x-4">

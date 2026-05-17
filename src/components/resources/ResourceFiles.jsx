@@ -61,7 +61,7 @@ const ResourceFiles = () => {
         <>
             <BackButton />
             
-            <div className={`mt-8 mr-8 flex flex-wrap ${listView ? 'divide-y' : 'gap-6'}`}>
+            <div className={`mt-8 mx-4 md:mx-0 md:mr-8 flex flex-wrap ${listView ? 'divide-y' : 'gap-4 md:gap-6'}`}>
                 {listView && <p className="font-GeneralSans-Semibold mb-8 text-xs">Files</p>}
 
                 {resources.length > 0 ? (

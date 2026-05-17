@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown, ChevronRight, X } from "lucide-react";
 import HomeActive from "../assets/images/navIcons/House-active.png";
 import Home from "../assets/images/navIcons/House.png";
 import UserActive from "../assets/images/navIcons/User-active.png";
@@ -78,10 +78,11 @@ const navItems = [
   }
 ];
 
-const Sidebar = ({ collapsed, setCollapsed }) => {
+const Sidebar = ({ collapsed, setCollapsed, mobileOpen, setMobileOpen }) => {
   const location = useLocation();
   const [expandedItems, setExpandedItems] = useState({});
   const toggleSidebar = () => setCollapsed((prev) => !prev);
+  const closeMobile = () => setMobileOpen(false);
 
   // Check if current path is within a nav item's sub-items
   const isItemActive = (item) => {
@@ -112,59 +113,42 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
     return false;
   };
 
-  return (
-    <motion.div
-      animate={{ width: collapsed ? "80px" : "250px" }}
-      className="h-full bg-gray-50 shadow-lg flex flex-col transition-all duration-300"
-    >
+  const navContent = (showLabels) => (
+    <>
       <nav className="flex-1">
         <ul className="space-y-2 p-4">
           {navItems.map((item) => (
             <li key={item.name}>
               {item.subItems ? (
-                // Item with sub-navigation
                 <div>
                   <div
-                    onClick={() => !collapsed && toggleExpand(item.name)}
+                    onClick={() => showLabels && toggleExpand(item.name)}
                     className={`flex items-center gap-3 p-3 rounded-lg transition-all duration-300 cursor-pointer ${
                       isItemActive(item) ? "font-semibold" : "text-gray-700"
                     }`}
                     style={{
                       backgroundColor: isItemActive(item) ? item.bg : "transparent",
                       color: isItemActive(item) ? item.color : "#4B5563",
-                      borderLeft: isItemActive(item) && collapsed ? "2px solid" : ""
+                      borderLeft: isItemActive(item) && !showLabels ? "2px solid" : ""
                     }}
                   >
-                    <img
-                      src={isItemActive(item) ? item.activeImg : item.img}
-                      alt={`${item.name} icon`}
-                      className="w-6 h-6"
-                    />
-                    {!collapsed && (
+                    <img src={isItemActive(item) ? item.activeImg : item.img} alt={`${item.name} icon`} className="w-6 h-6 shrink-0" />
+                    {showLabels && (
                       <>
                         <span className="flex-1">{item.name}</span>
-                        {isExpanded(item) ? (
-                          <ChevronDown size={16} />
-                        ) : (
-                          <ChevronRight size={16} />
-                        )}
+                        {isExpanded(item) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                       </>
                     )}
                   </div>
-                  
-                  {/* Sub-items */}
-                  {!collapsed && isExpanded(item) && (
+                  {showLabels && isExpanded(item) && (
                     <ul className="ml-9 mt-1 space-y-1">
                       {item.subItems.map((subItem) => (
                         <li key={subItem.name}>
                           <NavLink
                             to={subItem.path}
+                            onClick={closeMobile}
                             className={({ isActive }) =>
-                              `block py-2 px-3 rounded-lg text-sm transition-all duration-300 ${
-                                isActive
-                                  ? "font-semibold"
-                                  : "text-gray-600 hover:text-gray-900"
-                              }`
+                              `block py-2 px-3 rounded-lg text-sm transition-all duration-300 ${isActive ? "font-semibold" : "text-gray-600 hover:text-gray-900"}`
                             }
                             style={({ isActive }) => ({
                               backgroundColor: isActive ? item.bg : "transparent",
@@ -179,28 +163,22 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
                   )}
                 </div>
               ) : (
-                // Regular item without sub-navigation
                 <NavLink
                   to={item.path}
+                  onClick={closeMobile}
                   className={({ isActive }) =>
-                    `flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${
-                      isActive ? "font-semibold" : "text-gray-700"
-                    }`
+                    `flex items-center gap-3 p-3 rounded-lg transition-all duration-300 ${isActive ? "font-semibold" : "text-gray-700"}`
                   }
                   style={({ isActive }) => ({
                     backgroundColor: isActive ? item.bg : "transparent",
                     color: isActive ? item.color : "#4B5563",
-                    borderLeft: isActive && collapsed ? "2px solid" : ""
+                    borderLeft: isActive && !showLabels ? "2px solid" : ""
                   })}
                 >
                   {({ isActive }) => (
                     <>
-                      <img
-                        src={isActive ? item.activeImg : item.img}
-                        alt={`${item.name} icon`}
-                        className="w-6 h-6"
-                      />
-                      {!collapsed && <span>{item.name}</span>}
+                      <img src={isActive ? item.activeImg : item.img} alt={`${item.name} icon`} className="w-6 h-6 shrink-0" />
+                      {showLabels && <span>{item.name}</span>}
                     </>
                   )}
                 </NavLink>
@@ -212,12 +190,57 @@ const Sidebar = ({ collapsed, setCollapsed }) => {
       <div className="p-4 border-t">
         <div
           onClick={toggleSidebar}
-          className="flex p-3 gap-x-3 items-center w-full cursor-pointer py-2 rounded-lg hover:bg-opacity-90 transition-all"
+          className="hidden md:flex p-3 gap-x-3 items-center w-full cursor-pointer py-2 rounded-lg hover:bg-gray-100 transition-all"
         >
-          <img src={SidebarIcon} /> {!collapsed && <span>Collapse</span>}
+          <img src={SidebarIcon} alt="collapse" />
+          {showLabels && <span>Collapse</span>}
         </div>
       </div>
-    </motion.div>
+    </>
+  );
+
+  return (
+    <>
+      {/* Desktop sidebar */}
+      <motion.div
+        animate={{ width: collapsed ? "80px" : "250px" }}
+        className="hidden md:flex h-full bg-gray-50 shadow-lg flex-col transition-all duration-300 shrink-0"
+      >
+        {navContent(!collapsed)}
+      </motion.div>
+
+      {/* Mobile overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeMobile}
+              className="fixed inset-0 z-40 bg-black/40 md:hidden"
+            />
+            <motion.div
+              key="drawer"
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "tween", duration: 0.25 }}
+              className="fixed top-0 left-0 z-50 h-full w-72 bg-gray-50 shadow-xl flex flex-col md:hidden"
+            >
+              <div className="flex items-center justify-between px-4 py-3 border-b">
+                <span className="font-GeneralSans-Semibold text-main_grey">Menu</span>
+                <button onClick={closeMobile} className="p-1 rounded-lg hover:bg-gray-200">
+                  <X size={20} />
+                </button>
+              </div>
+              {navContent(true)}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
 

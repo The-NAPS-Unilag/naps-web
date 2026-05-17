@@ -150,10 +150,10 @@ function Dashboard() {
     return (
         <>
             <div>
-                <h1 className="mb-6 text-4xl font-GeneralSans-Semibold">Dashboard</h1>
+                <h1 className="mb-4 text-2xl md:text-4xl font-GeneralSans-Semibold">Dashboard</h1>
 
                 <div className="flex gap-3">
-                    <p className="text-2xl font-GeneralSans-Semibold">
+                    <p className="text-xl md:text-2xl font-GeneralSans-Semibold">
                         Welcome {user?.firstname || 'Student'}
                     </p>
                     <div className='w-6 h-6 rounded-full bg-[#7C9910] p-1 flex items-center justify-center'>
@@ -166,7 +166,7 @@ function Dashboard() {
                 </div>
 
                 {/* DashboardChild has both src and alt attributes :) */}
-                <div className='flex flex-col grid-cols-2 gap-8 mt-8 md:grid'>
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-6'>
                     <Link to={'/upcoming-events'}>
                         <DashboardChild
                             title={'Upcoming Events'}

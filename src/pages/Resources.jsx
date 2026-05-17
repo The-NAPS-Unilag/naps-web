@@ -22,7 +22,7 @@ export default function Resources() {
       />
 
       {/* Toggle between list view and grid view */}
-      <div className="flex justify-end mr-8">
+      <div className="flex justify-end mx-4 md:mx-0 md:mr-8">
         <div className="min-w-[72px] min-h-[36px] flex mt-4">
           <div
             className={`p-3  rounded-l-lg ${

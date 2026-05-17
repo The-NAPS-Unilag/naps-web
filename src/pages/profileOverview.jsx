@@ -148,11 +148,11 @@ const ProfileOverview = () => {
 
   return (
     <div>
-      <p className="text-[36px] font-GeneralSans-Semibold text-[#BB4259]">
+      <p className="text-2xl md:text-[36px] font-GeneralSans-Semibold text-[#BB4259]">
         Profile Overview
       </p>
-      <div className="w-full flex flex-col items-center">
-        <div className="max-w-[450px] w-[450px]">
+      <div className="w-full flex flex-col items-center px-0">
+        <div className="w-full max-w-[450px]">
           <div>
             <div className="flex justify-between items-center space-y-2 mt-8">
               <p className="font-GeneralSans-Medium mb-2">Personal Details</p>

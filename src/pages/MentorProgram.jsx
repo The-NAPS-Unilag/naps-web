@@ -219,7 +219,7 @@ const MentorProgram = () => {
 
     return (
         <>
-            <h1 className="max-md:text-center text-4xl font-GeneralSans-Semibold text-[#A5CC15]">
+            <h1 className="text-center md:text-left text-2xl md:text-4xl font-GeneralSans-Semibold text-[#A5CC15]">
                 Mentor Program
             </h1>
 
@@ -246,7 +246,7 @@ const MentorProgram = () => {
                 </div>
             </div>
 
-            <div className="md:w-[448px] mt-6 mx-auto font-GeneralSans-Semibold text-[#5B5C60]">
+            <div className="w-full max-w-lg mt-6 mx-auto font-GeneralSans-Semibold text-[#5B5C60]">
                 {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
                 {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
 
